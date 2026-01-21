@@ -1,0 +1,53 @@
+# ReUnity Docker Compose Configuration
+# Trauma-Aware AI Support System
+#
+# DISCLAIMER: This is not a clinical or treatment document. It is a theoretical
+# and support framework only.
+
+version: '3.8'
+
+services:
+  reunity:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reunity-api
+    ports:
+      - "8000:8000"
+    environment:
+      - REUNITY_STORAGE_PATH=/app/data
+      - PYTHONPATH=/app/src
+    volumes:
+      - reunity-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Development service with hot reload
+  reunity-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reunity-dev
+    ports:
+      - "8001:8000"
+    environment:
+      - REUNITY_STORAGE_PATH=/app/data
+      - PYTHONPATH=/app/src
+    volumes:
+      - ./src:/app/src:ro
+      - ./tests:/app/tests:ro
+      - reunity-dev-data:/app/data
+    command: uvicorn reunity.api.main:app --host 0.0.0.0 --port 8000 --reload
+    profiles:
+      - dev
+
+volumes:
+  reunity-data:
+    driver: local
+  reunity-dev-data:
+    driver: local
