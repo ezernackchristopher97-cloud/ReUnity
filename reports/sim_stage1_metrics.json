@@ -1,0 +1,169 @@
+{
+  "total": 20,
+  "passed": 18,
+  "failed": 2,
+  "details": [
+    {
+      "input": "I'm feeling pretty good today, just wanted to chec...",
+      "expected_state": "stable",
+      "estimated_state": "stable",
+      "entropy_state": "elevated",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "Things have been okay lately, nothing major happen...",
+      "expected_state": "stable",
+      "estimated_state": "stable",
+      "entropy_state": "elevated",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I had a nice conversation with a friend yesterday",
+      "expected_state": "stable",
+      "estimated_state": "stable",
+      "entropy_state": "elevated",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I'm feeling a bit anxious about an upcoming meetin...",
+      "expected_state": "elevated",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I've been having trouble sleeping the past few nig...",
+      "expected_state": "elevated",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I feel overwhelmed with everything going on",
+      "expected_state": "elevated",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "My heart is racing and I can't calm down",
+      "expected_state": "crisis",
+      "estimated_state": "crisis",
+      "entropy_state": "crisis",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I feel like I'm losing control",
+      "expected_state": "crisis",
+      "estimated_state": "crisis",
+      "entropy_state": "crisis",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "Everything feels hopeless right now",
+      "expected_state": "crisis",
+      "estimated_state": "crisis",
+      "entropy_state": "crisis",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I don't want to be here anymore",
+      "expected_state": "crisis",
+      "estimated_state": "crisis",
+      "entropy_state": "crisis",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I'm thinking about hurting myself",
+      "expected_state": "crisis",
+      "estimated_state": "crisis",
+      "entropy_state": "crisis",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I feel disconnected from my body",
+      "expected_state": "elevated",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I don't recognize myself in the mirror",
+      "expected_state": "crisis",
+      "estimated_state": "crisis",
+      "entropy_state": "crisis",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "My partner said I was imagining things again",
+      "expected_state": "elevated",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "They keep telling me I'm too sensitive",
+      "expected_state": "elevated",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I feel like I'm walking on eggshells around them",
+      "expected_state": "elevated",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I've been isolated from my friends lately",
+      "expected_state": "elevated",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "input": "I'm starting to feel more like myself again",
+      "expected_state": "recovery",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": false,
+      "violations": []
+    },
+    {
+      "input": "The therapy is helping me understand my patterns",
+      "expected_state": "stable",
+      "estimated_state": "elevated",
+      "entropy_state": "high",
+      "passed": false,
+      "violations": []
+    },
+    {
+      "input": "I practiced the grounding technique you suggested",
+      "expected_state": "stable",
+      "estimated_state": "stable",
+      "entropy_state": "elevated",
+      "passed": true,
+      "violations": []
+    }
+  ],
+  "elapsed_seconds": 0.01285552978515625,
+  "pass_rate": 0.9
+}

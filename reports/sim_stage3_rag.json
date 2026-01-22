@@ -1,0 +1,135 @@
+{
+  "total": 14,
+  "passed": 11,
+  "failed": 3,
+  "details": [
+    {
+      "input": "What is the 5-4-3-2-1 grounding technique?",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.3867954606029583,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "How can I regulate my emotions better?",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.41497743767135964,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "What are signs of a healthy relationship?",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.3312357453105129,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "What is self-care?",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.2186361837269052,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "What are adaptive coping strategies?",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.32242997455503497,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "Tell me about the window of tolerance",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.2990202045148034,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "How do I create a grounding kit?",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.4336800884091582,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "What is emotional regulation?",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.3200246617745921,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "What are warning signs in relationships?",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.4120273885273041,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "How do I cope during a crisis?",
+      "expected_action": "retrieve",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.40822565798782545,
+      "posterior_gap": 0.5,
+      "passed": true
+    },
+    {
+      "input": "xyzabc123 nonsense query",
+      "expected_action": "clarify",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.5,
+      "posterior_gap": 0.5,
+      "passed": false
+    },
+    {
+      "input": "?",
+      "expected_action": "clarify",
+      "actual_action": "clarify",
+      "num_chunks": 0,
+      "prior_gap": 0.8,
+      "posterior_gap": null,
+      "passed": true
+    },
+    {
+      "input": "What is the capital of France?",
+      "expected_action": "refuse",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.40384973942339114,
+      "posterior_gap": 0.5,
+      "passed": false
+    },
+    {
+      "input": "How do I cook pasta?",
+      "expected_action": "refuse",
+      "actual_action": "answer",
+      "num_chunks": 3,
+      "prior_gap": 0.39768265090712573,
+      "posterior_gap": 0.5,
+      "passed": false
+    }
+  ],
+  "elapsed_seconds": 0.009071826934814453,
+  "pass_rate": 0.7857142857142857
+}

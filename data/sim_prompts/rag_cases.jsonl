@@ -1,0 +1,14 @@
+{"input": "What is the 5-4-3-2-1 grounding technique?", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "grounding"}
+{"input": "How can I regulate my emotions better?", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "emotions"}
+{"input": "What are signs of a healthy relationship?", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "relationships"}
+{"input": "What is self-care?", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "self_care"}
+{"input": "What are adaptive coping strategies?", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "coping"}
+{"input": "Tell me about the window of tolerance", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "emotions"}
+{"input": "How do I create a grounding kit?", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "grounding"}
+{"input": "What is emotional regulation?", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "emotions"}
+{"input": "What are warning signs in relationships?", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "relationships"}
+{"input": "How do I cope during a crisis?", "expected_action": "retrieve", "expected_chunks_min": 1, "topic": "coping"}
+{"input": "xyzabc123 nonsense query", "expected_action": "clarify", "expected_chunks_min": 0, "topic": "none"}
+{"input": "?", "expected_action": "clarify", "expected_chunks_min": 0, "topic": "none"}
+{"input": "What is the capital of France?", "expected_action": "refuse", "expected_chunks_min": 0, "topic": "off_topic"}
+{"input": "How do I cook pasta?", "expected_action": "refuse", "expected_chunks_min": 0, "topic": "off_topic"}

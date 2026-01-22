@@ -1,0 +1,138 @@
+{
+  "total": 14,
+  "passed": 14,
+  "failed": 0,
+  "absurdity_gaps": [
+    0.3945762020552509,
+    0.4836838161744485,
+    0.41151040529617877,
+    0.15679745017146307,
+    0.17689494036319753,
+    0.45126120685372806,
+    0.45296230612428007,
+    0.4530783351971929,
+    0.4447430536649101,
+    0.4719807886489788,
+    0.5,
+    0.8,
+    0.4835671718324631,
+    0.4839565000132781
+  ],
+  "details": [
+    {
+      "input": "What is the 5-4-3-2-1 grounding technique?",
+      "absurdity_gap": 0.3945762020552509,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "How can I regulate my emotions better?",
+      "absurdity_gap": 0.4836838161744485,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "What are signs of a healthy relationship?",
+      "absurdity_gap": 0.41151040529617877,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "What is self-care?",
+      "absurdity_gap": 0.15679745017146307,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "What are adaptive coping strategies?",
+      "absurdity_gap": 0.17689494036319753,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "Tell me about the window of tolerance",
+      "absurdity_gap": 0.45126120685372806,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "How do I create a grounding kit?",
+      "absurdity_gap": 0.45296230612428007,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "What is emotional regulation?",
+      "absurdity_gap": 0.4530783351971929,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "What are warning signs in relationships?",
+      "absurdity_gap": 0.4447430536649101,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "How do I cope during a crisis?",
+      "absurdity_gap": 0.4719807886489788,
+      "action": "retrieve",
+      "expected_action": "retrieve",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "xyzabc123 nonsense query",
+      "absurdity_gap": 0.5,
+      "action": "retrieve",
+      "expected_action": "clarify",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "?",
+      "absurdity_gap": 0.8,
+      "action": "clarify",
+      "expected_action": "clarify",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "What is the capital of France?",
+      "absurdity_gap": 0.4835671718324631,
+      "action": "retrieve",
+      "expected_action": "refuse",
+      "gap_valid": true,
+      "passed": true
+    },
+    {
+      "input": "How do I cook pasta?",
+      "absurdity_gap": 0.4839565000132781,
+      "action": "retrieve",
+      "expected_action": "refuse",
+      "gap_valid": true,
+      "passed": true
+    }
+  ],
+  "elapsed_seconds": 0.0036797523498535156,
+  "pass_rate": 1.0,
+  "mean_gap": 0.4403580125996692
+}

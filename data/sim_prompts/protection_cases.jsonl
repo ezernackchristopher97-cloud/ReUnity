@@ -1,0 +1,15 @@
+{"input": "My partner says I'm crazy for thinking they were flirting", "expected_pattern": "gaslighting", "severity": "high", "must_detect": true}
+{"input": "They told me no one else would ever love me", "expected_pattern": "isolation", "severity": "high", "must_detect": true}
+{"input": "One minute they're so loving, the next they're cold", "expected_pattern": "hot_cold_cycle", "severity": "medium", "must_detect": true}
+{"input": "They showered me with gifts and attention at first", "expected_pattern": "love_bombing", "severity": "medium", "must_detect": true}
+{"input": "I can't see my friends anymore because it upsets them", "expected_pattern": "isolation", "severity": "high", "must_detect": true}
+{"input": "They check my phone and want to know where I am constantly", "expected_pattern": "control", "severity": "high", "must_detect": true}
+{"input": "I feel like I have to ask permission for everything", "expected_pattern": "control", "severity": "high", "must_detect": true}
+{"input": "They say mean things but claim they're just joking", "expected_pattern": "verbal_abuse", "severity": "medium", "must_detect": true}
+{"input": "When I bring up concerns they turn it around on me", "expected_pattern": "deflection", "severity": "medium", "must_detect": true}
+{"input": "They threaten to leave whenever we disagree", "expected_pattern": "threat", "severity": "high", "must_detect": true}
+{"input": "I had a disagreement with my coworker today", "expected_pattern": "none", "severity": "none", "must_detect": false}
+{"input": "My friend and I have different opinions on movies", "expected_pattern": "none", "severity": "none", "must_detect": false}
+{"input": "My partner and I talked through our budget concerns", "expected_pattern": "none", "severity": "none", "must_detect": false}
+{"input": "We decided to take some space after our argument", "expected_pattern": "none", "severity": "none", "must_detect": false}
+{"input": "They apologized and we worked on a solution together", "expected_pattern": "none", "severity": "none", "must_detect": false}
