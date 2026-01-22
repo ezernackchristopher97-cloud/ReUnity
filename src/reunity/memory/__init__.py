@@ -2,11 +2,13 @@
 
 from reunity.memory.continuity_store import (
     ConsentScope,
-    ContinuityMemoryStore,
+    IdentityState,
     JournalEntry,
-    MemoryFragment,
-    MemoryThread,
+    MemoryEntry,
+    MemoryType,
+    RecursiveIdentityMemoryEngine,
     RetrievalResult,
+    TimelineEvent,
 )
 from reunity.memory.timeline_threading import (
     MemoryValence,
@@ -18,15 +20,23 @@ from reunity.memory.timeline_threading import (
     TimelineThreader,
 )
 
+# Backwards compatibility aliases
+ContinuityMemoryStore = RecursiveIdentityMemoryEngine
+
 __all__ = [
+    # continuity_store classes
     "ConsentScope",
-    "ContinuityMemoryStore",
+    "ContinuityMemoryStore",  # alias for backwards compatibility
+    "IdentityState",
     "JournalEntry",
-    "MemoryFragment",
-    "MemoryThread",
+    "MemoryEntry",
+    "MemoryType",
+    "RecursiveIdentityMemoryEngine",
+    "RetrievalResult",
+    "TimelineEvent",
+    # timeline_threading classes
     "MemoryValence",
     "NarrativeSegment",
-    "RetrievalResult",
     "ThreadType",
     "TimelineGap",
     "TimelineMemory",
