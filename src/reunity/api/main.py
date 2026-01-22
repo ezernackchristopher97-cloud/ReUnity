@@ -33,11 +33,15 @@ from fastapi.responses import JSONResponse, FileResponse
 from pydantic import BaseModel, Field
 
 from reunity.core.entropy import (
-    EntropyAnalyzer,
+    EntropyStateDetector,
     EntropyState,
     EntropyMetrics,
 )
-from reunity.router.state_router import StateRouter, PolicyType
+from reunity.router.state_router import StateRouter, PolicyMode
+
+# Backwards compatibility aliases
+EntropyAnalyzer = EntropyStateDetector
+PolicyType = PolicyMode
 from reunity.protective.pattern_recognizer import (
     ProtectivePatternRecognizer,
     InteractionAnalysis,
