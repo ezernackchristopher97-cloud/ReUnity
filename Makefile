@@ -186,3 +186,21 @@ help:
 	@echo "Cleanup:"
 	@echo "  make clean          - Remove all generated files"
 	@echo "  make clean-index    - Remove RAG index only"
+
+# Real data simulations
+sim-real:
+@echo "Running real data simulations with GoEmotions dataset..."
+python scripts/run_real_simulations.py
+
+sim-download-data:
+@echo "Downloading GoEmotions dataset..."
+mkdir -p data/goemotions
+cd data/goemotions && \
+wget -q https://raw.githubusercontent.com/google-research/google-research/master/goemotions/data/train.tsv && \
+wget -q https://raw.githubusercontent.com/google-research/google-research/master/goemotions/data/dev.tsv && \
+wget -q https://raw.githubusercontent.com/google-research/google-research/master/goemotions/data/test.tsv && \
+wget -q https://raw.githubusercontent.com/google-research/google-research/master/goemotions/data/emotions.txt
+@echo "Downloaded GoEmotions dataset (54k+ comments, 27 emotions)"
+
+sim-all-real: sim-download-data sim-real
+@echo "All real data simulations complete!"

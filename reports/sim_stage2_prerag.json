@@ -5,8 +5,8 @@
   "absurdity_gaps": [
     0.3945762020552509,
     0.4836838161744485,
-    0.41151040529617877,
-    0.15679745017146307,
+    0.4115104052961787,
+    0.15679745017146302,
     0.17689494036319753,
     0.45126120685372806,
     0.45296230612428007,
@@ -37,7 +37,7 @@
     },
     {
       "input": "What are signs of a healthy relationship?",
-      "absurdity_gap": 0.41151040529617877,
+      "absurdity_gap": 0.4115104052961787,
       "action": "retrieve",
       "expected_action": "retrieve",
       "gap_valid": true,
@@ -45,7 +45,7 @@
     },
     {
       "input": "What is self-care?",
-      "absurdity_gap": 0.15679745017146307,
+      "absurdity_gap": 0.15679745017146302,
       "action": "retrieve",
       "expected_action": "retrieve",
       "gap_valid": true,
@@ -132,7 +132,7 @@
       "passed": true
     }
   ],
-  "elapsed_seconds": 0.0036797523498535156,
+  "elapsed_seconds": 0.0021483898162841797,
   "pass_rate": 1.0,
-  "mean_gap": 0.4403580125996692
+  "mean_gap": 0.44035801259966917
 }
