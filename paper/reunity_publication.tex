@@ -488,7 +488,7 @@ The system continuously monitors entropy levels across multiple timescales, from
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/simulation_1_entropy_analysis.pdf}
-\caption[Shannon Entropy Analysis]{Shannon entropy analysis of emotional state distributions from the GoEmotions dataset (n=54,263). The analysis reveals an overall entropy of 4.01 bits across 27 emotion categories. Code path: \texttt{scripts/run\_real\_simulations.py} $\rightarrow$ \texttt{simulation\_1\_entropy\_analysis()}.}
+\caption[Shannon Entropy Analysis]{Shannon entropy analysis of emotional state distributions from the GoEmotions dataset (n=54,263). The analysis reveals an overall entropy of 4.01 bits across 27 emotion categories.}
 \label{fig:entropy_analysis}
 \end{figure}
 
@@ -509,7 +509,7 @@ The Jensen-Shannon divergence provides a symmetric measure of the difference bet
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/simulation_2_js_divergence.pdf}
-\caption[Jensen-Shannon Divergence Matrix]{Jensen-Shannon divergence matrix for emotional state transitions computed from GoEmotions data. Higher values (darker) indicate greater divergence between states. Code path: \texttt{scripts/run\_real\_simulations.py} $\rightarrow$ \texttt{simulation\_2\_js\_divergence()}.}
+\caption[Jensen-Shannon Divergence Matrix]{Jensen-Shannon divergence matrix for emotional state transitions computed from GoEmotions data. Higher values (darker) indicate greater divergence between states.}
 \label{fig:js_divergence}
 \end{figure}
 
@@ -556,7 +556,7 @@ For binary correlated emotional variables (anxious/calm vs. active/passive):
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/simulation_3_mutual_information.pdf}
-\caption[Mutual Information Matrix]{Mutual information matrix for emotion co-occurrences from GoEmotions data. Higher values indicate stronger dependencies between emotional states. Code path: \texttt{scripts/run\_real\_simulations.py} $\rightarrow$ \texttt{simulation\_3\_mutual\_information()}.}
+\caption[Mutual Information Matrix]{Mutual information matrix for emotion co-occurrences from GoEmotions data. Higher values indicate stronger dependencies between emotional states.}
 \label{fig:mutual_info}
 \end{figure}
 
@@ -619,7 +619,7 @@ The system uses Lyapunov analysis to identify early warning signs of emotional d
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/simulation_4_lyapunov_stability.pdf}
-\caption[Lyapunov Exponent Stability Analysis]{Lyapunov exponent stability analysis of emotional trajectories. Negative values (blue) indicate stable dynamics; positive values (red) indicate chaotic behavior. Mean $\lambda = 0.025$ across the dataset. Code path: \texttt{scripts/run\_real\_simulations.py} $\rightarrow$ \texttt{simulation\_4\_lyapunov\_stability()}.}
+\caption[Lyapunov Exponent Stability Analysis]{Lyapunov exponent stability analysis of emotional trajectories. Negative values (blue) indicate stable dynamics; positive values (red) indicate chaotic behavior. Mean $\lambda = 0.025$ across the dataset.}
 \label{fig:lyapunov}
 \end{figure}
 
@@ -686,7 +686,7 @@ Where $p_i(t)$ represents the probability of different emotional states at time 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/simulation_5_state_router.pdf}
-\caption[State Router Validation Results]{State router validation results from GoEmotions data. The entropy-based state analyzer correctly classified emotional states with the majority (64.6\%) identified as stable. Code path: \texttt{scripts/run\_real\_simulations.py} $\rightarrow$ \texttt{simulation\_5\_state\_router()}.}
+\caption[State Router Validation Results]{State router validation results from GoEmotions data. The entropy-based state analyzer correctly classified emotional states with the majority (64.6\%) identified as stable.}
 \label{fig:state_router}
 \end{figure}
 
@@ -808,7 +808,7 @@ This feature is not diagnostic but rather a reflective mechanism, a protective m
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/simulation_6_pattern_detection.pdf}
-\caption[Protective Pattern Detection Results]{Protective pattern detection results from GoEmotions data analysis. The system identified multiple harmful relational patterns including hot-cold cycles (n=231), isolation indicators (n=89), and gaslighting patterns (n=156). Code path: \texttt{scripts/run\_real\_simulations.py} $\rightarrow$ \texttt{simulation\_6\_pattern\_detection()}.}
+\caption[Protective Pattern Detection Results]{Protective pattern detection results from GoEmotions data analysis. The system identified multiple harmful relational patterns including hot-cold cycles (n=231), isolation indicators (n=89), and gaslighting patterns (n=156).}
 \label{fig:pattern_detection}
 \end{figure}
 
