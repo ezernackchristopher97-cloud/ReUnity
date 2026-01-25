@@ -448,7 +448,7 @@ class EntropyAnalyzer:
             lyapunov = MathUtils.lyapunov_exponent(self.entropy_history[-10:])
         
         # Determine state
-        state = self._classify_state(shannon)
+        state = self._classify_state(shannon, emotional_state)
         self.current_state = state
         
         # Determine stability
@@ -463,18 +463,45 @@ class EntropyAnalyzer:
             stability=stability,
         )
     
-    def _classify_state(self, entropy: float) -> EntropyState:
-        """Classify entropy value into state."""
-        if entropy >= ENTROPY_THRESHOLDS["crisis"]:
-            return EntropyState.CRISIS
-        elif entropy >= ENTROPY_THRESHOLDS["high"]:
-            return EntropyState.HIGH_ENTROPY
-        elif entropy >= ENTROPY_THRESHOLDS["moderate"]:
-            return EntropyState.MODERATE
-        elif entropy >= ENTROPY_THRESHOLDS["low"]:
+    def _classify_state(self, entropy: float, emotional_state: Optional[Dict[str, float]] = None) -> EntropyState:
+        """Classify state based on emotional distribution and entropy."""
+        # Check for crisis marker in emotional state (set by keyword detection)
+        if emotional_state and "crisis" in emotional_state:
+            if emotional_state["crisis"] > 0.5:
+                return EntropyState.CRISIS
+        
+        if emotional_state:
+            # Check for dominant negative emotions
+            negative_emotions = ["fear", "sadness", "anger", "disgust"]
+            negative_sum = sum(emotional_state.get(e, 0) for e in negative_emotions)
+            positive_emotions = ["joy", "trust", "anticipation"]
+            positive_sum = sum(emotional_state.get(e, 0) for e in positive_emotions)
+            
+            # Single dominant negative emotion (like just "anxious") = HIGH, not CRISIS
+            # Crisis requires crisis keywords or multiple strong negatives
+            max_negative = max(emotional_state.get(e, 0) for e in negative_emotions)
+            
+            # If one emotion is completely dominant (>0.9), it's HIGH distress
+            if max_negative > 0.9:
+                return EntropyState.HIGH_ENTROPY
+            
+            # If negative emotions dominate overall
+            if negative_sum > 0.7:
+                return EntropyState.HIGH_ENTROPY
+            elif negative_sum > 0.5:
+                return EntropyState.MODERATE
+            elif negative_sum > 0.3:
+                return EntropyState.LOW_ENTROPY
+            elif positive_sum > 0.5:
+                return EntropyState.STABLE
+        
+        # Fallback to entropy-based classification
+        if entropy < 1.0:
+            return EntropyState.MODERATE  # Very concentrated state
+        elif entropy < 2.0:
             return EntropyState.LOW_ENTROPY
         else:
-            return EntropyState.STABLE
+            return EntropyState.STABLE  # High entropy = balanced = stable
     
     def _assess_stability(self, lyapunov: Optional[float]) -> str:
         """Assess system stability from Lyapunov exponent."""
@@ -670,7 +697,19 @@ class PatternRecognizer:
         return {
             PatternType.GASLIGHTING: [
                 "that never happened",
+                "never happened",
+                "it never happened",
                 "you're imagining things",
+                "imagining things",
+                "imagining it",
+                "making it up",
+                "didn't happen",
+                "never said that",
+                "you're wrong",
+                "that's not true",
+                "you're confused",
+                "misremember",
+                "your memory",
                 "you're too sensitive",
                 "you're crazy",
                 "no one else thinks that",
@@ -1885,8 +1924,65 @@ class ReUnity:
         return response
     
     def _infer_emotional_state(self, text: str) -> Dict[str, float]:
-        """Infer emotional state from text (simplified)."""
-        # Simple keyword-based inference
+        """Infer emotional state from text with crisis detection."""
+        text_lower = text.lower()
+        
+        # CRISIS KEYWORDS - These MUST trigger crisis state
+        crisis_keywords = {
+            "dissociating", "dissociate", "dissociated", "dissociation",
+            "depersonalization", "derealization", "not real", "unreal",
+            "floating", "detached", "out of body", "watching myself",
+            "numb", "empty inside", "disconnected from myself",
+            "suicidal", "suicide", "kill myself", "end it", "end my life",
+            "want to die", "better off dead", "no reason to live",
+            "can't go on", "give up", "hopeless",
+            "hurt myself", "cutting", "self harm", "self-harm",
+            "panic", "panicking", "panic attack", "can't breathe",
+            "heart racing", "going to die", "losing my mind",
+            "breaking down", "falling apart", "can't take it",
+            "overwhelmed", "drowning", "suffocating",
+            "flashback", "triggered", "ptsd",
+        }
+        
+        # HIGH DISTRESS KEYWORDS
+        high_keywords = {
+            "scared", "afraid", "terrified", "terror", "frightened",
+            "anxious", "anxiety", "worried", "nervous", "on edge",
+            "angry", "furious", "rage", "hate", "frustrated",
+            "sad", "depressed", "crying", "tears", "grief",
+            "confused", "lost", "uncertain", "doubt",
+            "alone", "lonely", "isolated", "abandoned",
+            "hurt", "pain", "suffering", "struggling",
+            "stressed", "tense", "restless", "agitated",
+            "ashamed", "guilty", "worthless", "failure",
+        }
+        
+        # STABLE KEYWORDS
+        stable_keywords = {
+            "calm", "peaceful", "relaxed", "okay", "fine", "good",
+            "happy", "content", "grateful", "hopeful", "better",
+            "safe", "secure", "grounded", "present", "centered",
+            "strong", "capable", "confident", "clear",
+        }
+        
+        # Check for crisis keywords FIRST
+        crisis_found = [kw for kw in crisis_keywords if kw in text_lower]
+        if crisis_found:
+            # Return distribution that will calculate to HIGH entropy (crisis)
+            return {
+                "crisis": 0.95,
+                "fear": 0.02,
+                "sadness": 0.01,
+                "anger": 0.01,
+                "joy": 0.005,
+                "trust": 0.005,
+            }
+        
+        # Check for high distress keywords
+        high_found = [kw for kw in high_keywords if kw in text_lower]
+        stable_found = [kw for kw in stable_keywords if kw in text_lower]
+        
+        # Build emotion distribution based on what was found
         emotions = {
             "joy": 0.0,
             "sadness": 0.0,
@@ -1898,31 +1994,58 @@ class ReUnity:
             "anticipation": 0.0,
         }
         
-        text_lower = text.lower()
+        # Score based on specific emotion words
+        joy_words = ["happy", "glad", "excited", "wonderful", "great", "love", "grateful", "hopeful"]
+        sad_words = ["sad", "depressed", "hopeless", "crying", "hurt", "lonely", "grief", "tears"]
+        anger_words = ["angry", "furious", "mad", "frustrated", "annoyed", "hate", "rage"]
+        fear_words = ["scared", "afraid", "anxious", "worried", "terrified", "panic", "nervous", "frightened"]
+        trust_words = ["safe", "secure", "calm", "peaceful", "okay", "fine", "good", "relaxed"]
         
-        # Joy indicators
-        joy_words = ["happy", "glad", "excited", "wonderful", "great", "love"]
-        emotions["joy"] = sum(1 for w in joy_words if w in text_lower) / len(joy_words)
+        for w in joy_words:
+            if w in text_lower:
+                emotions["joy"] += 0.2
+        for w in sad_words:
+            if w in text_lower:
+                emotions["sadness"] += 0.2
+        for w in anger_words:
+            if w in text_lower:
+                emotions["anger"] += 0.2
+        for w in fear_words:
+            if w in text_lower:
+                emotions["fear"] += 0.2
+        for w in trust_words:
+            if w in text_lower:
+                emotions["trust"] += 0.2
         
-        # Sadness indicators
-        sad_words = ["sad", "depressed", "hopeless", "crying", "hurt", "lonely"]
-        emotions["sadness"] = sum(1 for w in sad_words if w in text_lower) / len(sad_words)
+        # If high distress keywords found but no specific emotions, boost fear/sadness
+        if high_found and sum(emotions.values()) < 0.1:
+            emotions["fear"] = 0.4
+            emotions["sadness"] = 0.3
+            emotions["anger"] = 0.2
+            emotions["disgust"] = 0.1
         
-        # Anger indicators
-        anger_words = ["angry", "furious", "mad", "frustrated", "annoyed", "hate"]
-        emotions["anger"] = sum(1 for w in anger_words if w in text_lower) / len(anger_words)
-        
-        # Fear indicators
-        fear_words = ["scared", "afraid", "anxious", "worried", "terrified", "panic"]
-        emotions["fear"] = sum(1 for w in fear_words if w in text_lower) / len(fear_words)
+        # If stable keywords found and no distress, boost trust/joy
+        if stable_found and not high_found:
+            emotions["trust"] += 0.3
+            emotions["joy"] += 0.2
+            emotions["anticipation"] += 0.1
         
         # Normalize
         total = sum(emotions.values())
         if total > 0:
             emotions = {k: v / total for k, v in emotions.items()}
         else:
-            # Default neutral state
-            emotions = {k: 1/len(emotions) for k in emotions}
+            # Default to slightly positive neutral state (low entropy = stable)
+            emotions = {
+                "trust": 0.3,
+                "joy": 0.2,
+                "anticipation": 0.2,
+                "surprise": 0.1,
+                "sadness": 0.1,
+                "fear": 0.05,
+                "anger": 0.03,
+                "disgust": 0.02,
+            }
         
         return emotions
     
@@ -1980,8 +2103,8 @@ class ReUnity:
         # Add pattern warning if detected
         if patterns:
             most_confident = max(patterns, key=lambda p: p.confidence)
-            if most_confident.confidence > 0.5:
-                message += f"\n\nI noticed something that might be worth reflecting on: {most_confident.recommendation}"
+            if most_confident.confidence > 0.2:  # Lower threshold to catch more patterns
+                message = f"I noticed something in what you shared that might be worth reflecting on.\n\n{most_confident.recommendation}\n\n{message}"
         
         return message
     
