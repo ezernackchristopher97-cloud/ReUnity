@@ -1,115 +1,87 @@
-#!/usr/bin/env python3
 """
-ReUnity Standalone - Complete Trauma-Aware AI System
-=====================================================
+ReUnity AI Model v3.0.0
+Author: Christopher Ezernack
+January 2026
 
-A consolidated single-file implementation of the ReUnity system for easy
-deployment and testing. This file contains all core components and can be
-run directly in any Python environment.
+A trauma-aware AI support framework with:
+- OpenAI API integration for real contextual responses
+- PreRAG filters (QueryGate, EvidenceGate, AbsurdityGap)
+- RAG retrieval system
+- Entropy-based state detection
+- Pattern recognition for harmful dynamics
+- RIME memory continuity
+- Grounding techniques library
 
-Author: Christopher Ezernack, REOP Solutions
-License: MIT
-
-IMPORTANT DISCLAIMER
-====================
-ReUnity is NOT a clinical or treatment tool. It is a theoretical and support
-framework only. This software is not intended to diagnose, treat, cure, or
-prevent any medical or psychological condition. It should not be used as a
-substitute for professional mental health care.
-
-If you are in crisis, please contact:
-- National Suicide Prevention Lifeline: 988 (US)
-- Crisis Text Line: Text HOME to 741741 (US)
-- International Association for Suicide Prevention: https://www.iasp.info/resources/Crisis_Centres/
-
-Usage:
-    python reunity_standalone.py
-
-Requirements:
-    pip install numpy cryptography
-
+IMPORTANT DISCLAIMER: This is NOT a clinical or treatment tool.
+If you are in crisis, please call 988 (US) or your local crisis line.
 """
-
-from __future__ import annotations
 
 import os
 import sys
 import json
 import time
 import uuid
-import hashlib
-import secrets
-import logging
-from abc import ABC, abstractmethod
-from dataclasses import dataclass, field, asdict
-from datetime import datetime
-from enum import Enum, auto
-from typing import (
-    Dict, List, Optional, Tuple, Any, Callable, 
-    TypeVar, Generic, Union, Set
-)
-from collections import defaultdict
 import math
-import base64
+import random
+import logging
+import hashlib
+import re
+from dataclasses import dataclass, field
+from datetime import datetime
+from enum import Enum
+from typing import Dict, List, Optional, Any, Callable, Tuple
+from abc import ABC, abstractmethod
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger("ReUnity")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# Try to import numpy, fall back to pure Python if not available
-try:
-    import numpy as np
-    HAS_NUMPY = True
-except ImportError:
-    HAS_NUMPY = False
-    logger.warning("NumPy not available, using pure Python implementations")
+# ============================================================================
+# SECTION 1: CONFIGURATION
+# ============================================================================
 
-# Try to import cryptography, fall back to basic implementation if not available
-try:
-    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-    from cryptography.hazmat.primitives import hashes
-    from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-    HAS_CRYPTO = True
-except ImportError:
-    HAS_CRYPTO = False
-    logger.warning("Cryptography library not available, using basic encryption")
-
-
-# =============================================================================
-# CONSTANTS AND CONFIGURATION
-# =============================================================================
-
-VERSION = "1.0.0"
-EPSILON = 1e-10  # Small value to prevent log(0)
-
-# Entropy thresholds for state detection
-ENTROPY_THRESHOLDS = {
-    "crisis": 0.85,
-    "high": 0.70,
-    "moderate": 0.50,
-    "low": 0.30,
-    "stable": 0.15,
-}
-
-# Lyapunov stability thresholds
-LYAPUNOV_THRESHOLDS = {
-    "chaotic": 0.5,
-    "unstable": 0.1,
-    "marginal": 0.0,
-    "stable": -0.1,
-    "very_stable": -0.5,
-}
+@dataclass
+class ReUnityConfig:
+    """Configuration for ReUnity AI Model."""
+    
+    # API Configuration
+    openai_api_key: str = ""
+    openai_model: str = "gpt-4.1-mini"
+    openai_base_url: str = ""  # Leave empty for default
+    
+    # Entropy Thresholds
+    crisis_threshold: float = 0.85
+    high_threshold: float = 0.65
+    moderate_threshold: float = 0.45
+    low_threshold: float = 0.25
+    
+    # PreRAG Configuration
+    enable_prerag: bool = True
+    retrieve_threshold: float = 0.4
+    clarify_threshold: float = 0.7
+    
+    # RAG Configuration
+    enable_rag: bool = True
+    top_k_chunks: int = 5
+    
+    # Memory Configuration
+    enable_memory: bool = True
+    max_memories: int = 100
+    
+    # Web Server Configuration
+    web_host: str = "0.0.0.0"
+    web_port: int = 5000
+    
+    # Debug
+    debug: bool = False
 
 
-# =============================================================================
-# ENUMERATIONS
-# =============================================================================
+# ============================================================================
+# SECTION 2: ENTROPY STATES AND ANALYSIS
+# ============================================================================
 
 class EntropyState(Enum):
-    """Entropy-based emotional states."""
+    """Emotional entropy states."""
     CRISIS = "crisis"
     HIGH_ENTROPY = "high_entropy"
     MODERATE = "moderate"
@@ -117,90 +89,152 @@ class EntropyState(Enum):
     STABLE = "stable"
 
 
-class PolicyType(Enum):
-    """Policy types for state router."""
-    CRISIS_INTERVENTION = "crisis_intervention"
-    STABILIZATION = "stabilization"
-    SUPPORT = "support"
-    MAINTENANCE = "maintenance"
-    ENGAGEMENT = "engagement"
+@dataclass
+class EntropyAnalysis:
+    """Result of entropy analysis."""
+    state: EntropyState
+    entropy_value: float
+    confidence: float
+    dominant_emotions: Dict[str, float]
+    crisis_indicators: List[str]
+    timestamp: datetime = field(default_factory=datetime.now)
 
 
-class ConsentScope(Enum):
-    """Consent scopes for data access."""
-    PRIVATE = "private"
-    SELF_ONLY = "self_only"
-    TRUSTED_CONTACTS = "trusted_contacts"
-    CLINICIAN = "clinician"
-    RESEARCH_ANONYMIZED = "research_anonymized"
+class EntropyAnalyzer:
+    """Analyzes text for emotional entropy and crisis indicators."""
+    
+    # Crisis keywords that immediately trigger CRISIS state
+    CRISIS_KEYWORDS = [
+        "suicidal", "suicide", "kill myself", "end my life", "want to die",
+        "don't want to live", "better off dead", "no reason to live",
+        "dissociating", "dissociation", "disconnected from myself",
+        "not real", "nothing is real", "losing my mind",
+        "panic attack", "can't breathe", "heart racing",
+        "flashback", "triggered", "ptsd",
+        "self harm", "cutting", "hurting myself",
+        "overdose", "pills", "jump off",
+        "abuse", "abusing me", "hitting me", "hurting me",
+        "trapped", "no way out", "hopeless",
+        "voices", "hearing things", "seeing things",
+    ]
+    
+    # High distress keywords
+    HIGH_DISTRESS_KEYWORDS = [
+        "scared", "terrified", "afraid", "fear", "frightened",
+        "anxious", "anxiety", "panic", "worried", "nervous",
+        "angry", "furious", "rage", "hate", "livid",
+        "depressed", "depression", "sad", "crying", "tears",
+        "lonely", "alone", "isolated", "abandoned",
+        "overwhelmed", "can't cope", "falling apart",
+        "numb", "empty", "hollow", "dead inside",
+        "ashamed", "shame", "guilty", "worthless",
+        "confused", "lost", "don't know what to do",
+    ]
+    
+    # Positive/stable keywords
+    STABLE_KEYWORDS = [
+        "okay", "fine", "good", "great", "happy", "calm",
+        "peaceful", "relaxed", "content", "hopeful",
+        "better", "improving", "progress", "grateful",
+        "safe", "secure", "supported", "loved",
+    ]
+    
+    def __init__(self, config: ReUnityConfig):
+        self.config = config
+        self.current_state: Optional[EntropyState] = None
+        self.state_history: List[EntropyAnalysis] = []
+    
+    def analyze(self, text: str) -> EntropyAnalysis:
+        """Analyze text for emotional entropy."""
+        text_lower = text.lower()
+        
+        # Check for crisis indicators first
+        crisis_indicators = []
+        for keyword in self.CRISIS_KEYWORDS:
+            if keyword in text_lower:
+                crisis_indicators.append(keyword)
+        
+        # If any crisis indicators, immediately return CRISIS
+        if crisis_indicators:
+            analysis = EntropyAnalysis(
+                state=EntropyState.CRISIS,
+                entropy_value=0.95,
+                confidence=0.95,
+                dominant_emotions={"crisis": 1.0},
+                crisis_indicators=crisis_indicators,
+            )
+            self.current_state = EntropyState.CRISIS
+            self.state_history.append(analysis)
+            return analysis
+        
+        # Count high distress keywords
+        high_count = sum(1 for kw in self.HIGH_DISTRESS_KEYWORDS if kw in text_lower)
+        
+        # Count stable keywords
+        stable_count = sum(1 for kw in self.STABLE_KEYWORDS if kw in text_lower)
+        
+        # Calculate entropy based on keyword balance
+        total_keywords = high_count + stable_count + 1  # +1 to avoid division by zero
+        
+        if high_count > stable_count:
+            # More distress than stability
+            ratio = high_count / total_keywords
+            if ratio > 0.6:
+                state = EntropyState.HIGH_ENTROPY
+                entropy = 0.7 + (ratio * 0.2)
+            else:
+                state = EntropyState.MODERATE
+                entropy = 0.45 + (ratio * 0.2)
+        elif stable_count > high_count:
+            # More stability than distress
+            ratio = stable_count / total_keywords
+            if ratio > 0.6:
+                state = EntropyState.STABLE
+                entropy = 0.1 + (ratio * 0.1)
+            else:
+                state = EntropyState.LOW_ENTROPY
+                entropy = 0.25 + (ratio * 0.1)
+        else:
+            # Balanced or neutral
+            state = EntropyState.MODERATE
+            entropy = 0.5
+        
+        # Build dominant emotions
+        emotions = {}
+        if high_count > 0:
+            emotions["distress"] = high_count / total_keywords
+        if stable_count > 0:
+            emotions["stability"] = stable_count / total_keywords
+        if not emotions:
+            emotions["neutral"] = 1.0
+        
+        analysis = EntropyAnalysis(
+            state=state,
+            entropy_value=entropy,
+            confidence=0.8,
+            dominant_emotions=emotions,
+            crisis_indicators=[],
+        )
+        
+        self.current_state = state
+        self.state_history.append(analysis)
+        return analysis
 
+
+# ============================================================================
+# SECTION 3: PATTERN RECOGNITION
+# ============================================================================
 
 class PatternType(Enum):
     """Types of harmful patterns."""
     GASLIGHTING = "gaslighting"
     LOVE_BOMBING = "love_bombing"
-    HOT_COLD_CYCLE = "hot_cold_cycle"
     ISOLATION = "isolation"
-    EMOTIONAL_BAITING = "emotional_baiting"
-    ABANDONMENT_TRIGGER = "abandonment_trigger"
-    INVALIDATION = "invalidation"
-    TRIANGULATION = "triangulation"
-    SILENT_TREATMENT = "silent_treatment"
+    HOT_COLD = "hot_cold"
     BLAME_SHIFTING = "blame_shifting"
-    FUTURE_FAKING = "future_faking"
-    HOOVERING = "hoovering"
-    DEVALUATION = "devaluation"
-
-
-class RegimeType(Enum):
-    """Regime types for behavior switching."""
-    NORMAL = "normal"
-    PROTECTIVE = "protective"
-    CRISIS = "crisis"
-    RECOVERY = "recovery"
-    GROWTH = "growth"
-
-
-# =============================================================================
-# DATA CLASSES
-# =============================================================================
-
-@dataclass
-class EntropyAnalysis:
-    """Result of entropy analysis."""
-    shannon_entropy: float
-    js_divergence: Optional[float]
-    mutual_information: Optional[float]
-    lyapunov_exponent: Optional[float]
-    state: EntropyState
-    stability: str
-    timestamp: float = field(default_factory=time.time)
-    
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            **asdict(self),
-            "state": self.state.value,
-        }
-
-
-@dataclass
-class MemoryEntry:
-    """A single memory entry in the continuity store."""
-    id: str
-    content: str
-    emotional_state: Dict[str, float]
-    entropy_at_creation: float
-    timestamp: float
-    tags: List[str]
-    consent_scope: ConsentScope
-    linked_memories: List[str] = field(default_factory=list)
-    alter_id: Optional[str] = None
-    
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            **asdict(self),
-            "consent_scope": self.consent_scope.value,
-        }
+    TRIANGULATION = "triangulation"
+    STONEWALLING = "stonewalling"
+    FINANCIAL_CONTROL = "financial_control"
 
 
 @dataclass
@@ -208,1632 +242,737 @@ class PatternDetection:
     """Result of pattern detection."""
     pattern_type: PatternType
     confidence: float
-    evidence: List[str]
-    timestamp: float
+    indicators: List[str]
     recommendation: str
-    
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            **asdict(self),
-            "pattern_type": self.pattern_type.value,
-        }
 
-
-@dataclass
-class Contradiction:
-    """A detected contradiction for reflection."""
-    id: str
-    statement_a: str
-    statement_b: str
-    context: str
-    detected_at: float
-    reflection: str
-    resolved: bool = False
-
-
-@dataclass
-class Policy:
-    """A policy for the state router."""
-    type: PolicyType
-    actions: List[str]
-    grounding_techniques: List[str]
-    escalation_threshold: float
-    de_escalation_threshold: float
-
-
-# =============================================================================
-# MATHEMATICAL FOUNDATIONS
-# =============================================================================
-
-class MathUtils:
-    """Mathematical utility functions for entropy calculations."""
-    
-    @staticmethod
-    def shannon_entropy(probabilities: List[float]) -> float:
-        """
-        Calculate Shannon entropy.
-        
-        S = -Σ(i=1 to n) p_i * log_2(p_i)
-        
-        Args:
-            probabilities: List of probability values (must sum to 1)
-            
-        Returns:
-            Shannon entropy value
-        """
-        if HAS_NUMPY:
-            p = np.array(probabilities)
-            p = p[p > EPSILON]  # Remove zeros
-            return -np.sum(p * np.log2(p + EPSILON))
-        else:
-            entropy = 0.0
-            for p in probabilities:
-                if p > EPSILON:
-                    entropy -= p * math.log2(p + EPSILON)
-            return entropy
-    
-    @staticmethod
-    def kl_divergence(p: List[float], q: List[float]) -> float:
-        """
-        Calculate Kullback-Leibler divergence.
-        
-        D_KL(P||Q) = Σ p(x) * log(p(x)/q(x))
-        """
-        if HAS_NUMPY:
-            p_arr = np.array(p) + EPSILON
-            q_arr = np.array(q) + EPSILON
-            return np.sum(p_arr * np.log2(p_arr / q_arr))
-        else:
-            kl = 0.0
-            for pi, qi in zip(p, q):
-                pi = pi + EPSILON
-                qi = qi + EPSILON
-                kl += pi * math.log2(pi / qi)
-            return kl
-    
-    @staticmethod
-    def jensen_shannon_divergence(p: List[float], q: List[float]) -> float:
-        """
-        Calculate Jensen-Shannon divergence.
-        
-        JS(P,Q) = (1/2)*D_KL(P||M) + (1/2)*D_KL(Q||M)
-        where M = (1/2)*(P + Q)
-        
-        Args:
-            p: First probability distribution
-            q: Second probability distribution
-            
-        Returns:
-            JS divergence (0 to 1, symmetric)
-        """
-        if HAS_NUMPY:
-            p_arr = np.array(p)
-            q_arr = np.array(q)
-            m = 0.5 * (p_arr + q_arr)
-        else:
-            m = [0.5 * (pi + qi) for pi, qi in zip(p, q)]
-        
-        return 0.5 * MathUtils.kl_divergence(p, m) + 0.5 * MathUtils.kl_divergence(q, m)
-    
-    @staticmethod
-    def mutual_information(
-        joint_probs: List[List[float]],
-        marginal_x: List[float],
-        marginal_y: List[float]
-    ) -> float:
-        """
-        Calculate mutual information.
-        
-        MI(X;Y) = Σ(x,y) p(x,y) * log_2(p(x,y) / (p(x)*p(y)))
-        
-        Args:
-            joint_probs: Joint probability matrix p(x,y)
-            marginal_x: Marginal probability p(x)
-            marginal_y: Marginal probability p(y)
-            
-        Returns:
-            Mutual information value
-        """
-        mi = 0.0
-        for i, px in enumerate(marginal_x):
-            for j, py in enumerate(marginal_y):
-                pxy = joint_probs[i][j] if i < len(joint_probs) and j < len(joint_probs[i]) else 0
-                if pxy > EPSILON and px > EPSILON and py > EPSILON:
-                    mi += pxy * math.log2(pxy / (px * py + EPSILON) + EPSILON)
-        return mi
-    
-    @staticmethod
-    def lyapunov_exponent(entropy_history: List[float], dt: float = 1.0) -> float:
-        """
-        Estimate Lyapunov exponent from entropy time series.
-        
-        λ = lim(n→∞) (1/n) * Σ(i=1 to n) log_2|dS/dt|_{t_i}
-        
-        Args:
-            entropy_history: Time series of entropy values
-            dt: Time step between measurements
-            
-        Returns:
-            Estimated Lyapunov exponent
-            λ > 0: chaos/instability
-            λ < 0: stability
-            λ ≈ 0: marginal stability
-        """
-        if len(entropy_history) < 2:
-            return 0.0
-        
-        # Calculate derivatives
-        derivatives = []
-        for i in range(1, len(entropy_history)):
-            dS = abs(entropy_history[i] - entropy_history[i-1])
-            if dS > EPSILON:
-                derivatives.append(math.log2(dS / dt + EPSILON))
-        
-        if not derivatives:
-            return 0.0
-        
-        return sum(derivatives) / len(derivatives)
-    
-    @staticmethod
-    def normalize_distribution(values: List[float]) -> List[float]:
-        """Normalize values to form a probability distribution."""
-        total = sum(values)
-        if total < EPSILON:
-            n = len(values)
-            return [1.0 / n] * n
-        return [v / total for v in values]
-
-
-# =============================================================================
-# ENTROPY-BASED EMOTIONAL STATE ANALYZER (EESA)
-# =============================================================================
-
-class EntropyAnalyzer:
-    """
-    Entropy-Based Emotional State Analyzer (EESA).
-    
-    Monitors Shannon entropy of emotional states, detects state transitions
-    using JS divergence, and tracks stability using Lyapunov exponents.
-    """
-    
-    def __init__(self, history_size: int = 100):
-        self.history_size = history_size
-        self.entropy_history: List[float] = []
-        self.state_history: List[Dict[str, float]] = []
-        self.current_state: Optional[EntropyState] = None
-    
-    def analyze(
-        self,
-        emotional_state: Dict[str, float],
-        previous_state: Optional[Dict[str, float]] = None
-    ) -> EntropyAnalysis:
-        """
-        Perform comprehensive entropy analysis.
-        
-        Args:
-            emotional_state: Current emotional state as {emotion: intensity}
-            previous_state: Previous emotional state for comparison
-            
-        Returns:
-            EntropyAnalysis with all metrics
-        """
-        # Normalize to probability distribution
-        probs = MathUtils.normalize_distribution(list(emotional_state.values()))
-        
-        # Calculate Shannon entropy
-        shannon = MathUtils.shannon_entropy(probs)
-        self.entropy_history.append(shannon)
-        self.state_history.append(emotional_state)
-        
-        # Trim history
-        if len(self.entropy_history) > self.history_size:
-            self.entropy_history = self.entropy_history[-self.history_size:]
-            self.state_history = self.state_history[-self.history_size:]
-        
-        # Calculate JS divergence if we have previous state
-        js_div = None
-        if previous_state:
-            prev_probs = MathUtils.normalize_distribution(list(previous_state.values()))
-            # Align distributions
-            all_emotions = set(emotional_state.keys()) | set(previous_state.keys())
-            p = [emotional_state.get(e, 0) for e in all_emotions]
-            q = [previous_state.get(e, 0) for e in all_emotions]
-            p = MathUtils.normalize_distribution(p)
-            q = MathUtils.normalize_distribution(q)
-            js_div = MathUtils.jensen_shannon_divergence(p, q)
-        
-        # Calculate Lyapunov exponent
-        lyapunov = None
-        if len(self.entropy_history) >= 3:
-            lyapunov = MathUtils.lyapunov_exponent(self.entropy_history[-10:])
-        
-        # Determine state
-        state = self._classify_state(shannon, emotional_state)
-        self.current_state = state
-        
-        # Determine stability
-        stability = self._assess_stability(lyapunov)
-        
-        return EntropyAnalysis(
-            shannon_entropy=shannon,
-            js_divergence=js_div,
-            mutual_information=None,  # Requires relationship data
-            lyapunov_exponent=lyapunov,
-            state=state,
-            stability=stability,
-        )
-    
-    def _classify_state(self, entropy: float, emotional_state: Optional[Dict[str, float]] = None) -> EntropyState:
-        """Classify state based on emotional distribution and entropy."""
-        # Check for crisis marker in emotional state (set by keyword detection)
-        if emotional_state and "crisis" in emotional_state:
-            if emotional_state["crisis"] > 0.5:
-                return EntropyState.CRISIS
-        
-        if emotional_state:
-            # Check for dominant negative emotions
-            negative_emotions = ["fear", "sadness", "anger", "disgust"]
-            negative_sum = sum(emotional_state.get(e, 0) for e in negative_emotions)
-            positive_emotions = ["joy", "trust", "anticipation"]
-            positive_sum = sum(emotional_state.get(e, 0) for e in positive_emotions)
-            
-            # Single dominant negative emotion (like just "anxious") = HIGH, not CRISIS
-            # Crisis requires crisis keywords or multiple strong negatives
-            max_negative = max(emotional_state.get(e, 0) for e in negative_emotions)
-            
-            # If one emotion is completely dominant (>0.9), it's HIGH distress
-            if max_negative > 0.9:
-                return EntropyState.HIGH_ENTROPY
-            
-            # If negative emotions dominate overall
-            if negative_sum > 0.7:
-                return EntropyState.HIGH_ENTROPY
-            elif negative_sum > 0.5:
-                return EntropyState.MODERATE
-            elif negative_sum > 0.3:
-                return EntropyState.LOW_ENTROPY
-            elif positive_sum > 0.5:
-                return EntropyState.STABLE
-        
-        # Fallback to entropy-based classification
-        if entropy < 1.0:
-            return EntropyState.MODERATE  # Very concentrated state
-        elif entropy < 2.0:
-            return EntropyState.LOW_ENTROPY
-        else:
-            return EntropyState.STABLE  # High entropy = balanced = stable
-    
-    def _assess_stability(self, lyapunov: Optional[float]) -> str:
-        """Assess system stability from Lyapunov exponent."""
-        if lyapunov is None:
-            return "unknown"
-        
-        if lyapunov > LYAPUNOV_THRESHOLDS["chaotic"]:
-            return "chaotic"
-        elif lyapunov > LYAPUNOV_THRESHOLDS["unstable"]:
-            return "unstable"
-        elif lyapunov > LYAPUNOV_THRESHOLDS["marginal"]:
-            return "marginal"
-        elif lyapunov > LYAPUNOV_THRESHOLDS["stable"]:
-            return "stable"
-        else:
-            return "very_stable"
-    
-    def get_trend(self, window: int = 5) -> str:
-        """Get entropy trend over recent history."""
-        if len(self.entropy_history) < window:
-            return "insufficient_data"
-        
-        recent = self.entropy_history[-window:]
-        slope = (recent[-1] - recent[0]) / (window - 1)
-        
-        if slope > 0.05:
-            return "increasing"
-        elif slope < -0.05:
-            return "decreasing"
-        else:
-            return "stable"
-
-
-# =============================================================================
-# STATE ROUTER
-# =============================================================================
-
-class StateRouter:
-    """
-    State Router for policy selection.
-    
-    Selects appropriate policies based on entropy state, stability,
-    and other contextual factors.
-    """
-    
-    def __init__(self):
-        self.policies = self._initialize_policies()
-        self.current_policy: Optional[Policy] = None
-        self.policy_history: List[Tuple[float, PolicyType]] = []
-    
-    def _initialize_policies(self) -> Dict[PolicyType, Policy]:
-        """Initialize default policies."""
-        return {
-            PolicyType.CRISIS_INTERVENTION: Policy(
-                type=PolicyType.CRISIS_INTERVENTION,
-                actions=[
-                    "Activate immediate grounding",
-                    "Provide crisis resources",
-                    "Simplify interface",
-                    "Enable emergency contacts",
-                ],
-                grounding_techniques=[
-                    "5-4-3-2-1 sensory grounding",
-                    "Ice cube technique",
-                    "Deep breathing 4-7-8",
-                    "Name 5 things you can see",
-                ],
-                escalation_threshold=0.95,
-                de_escalation_threshold=0.70,
-            ),
-            PolicyType.STABILIZATION: Policy(
-                type=PolicyType.STABILIZATION,
-                actions=[
-                    "Gentle grounding prompts",
-                    "Reduce cognitive load",
-                    "Offer structured choices",
-                    "Maintain calm presence",
-                ],
-                grounding_techniques=[
-                    "Body scan",
-                    "Progressive muscle relaxation",
-                    "Safe place visualization",
-                ],
-                escalation_threshold=0.85,
-                de_escalation_threshold=0.50,
-            ),
-            PolicyType.SUPPORT: Policy(
-                type=PolicyType.SUPPORT,
-                actions=[
-                    "Active listening responses",
-                    "Validation without judgment",
-                    "Gentle exploration prompts",
-                    "Resource suggestions",
-                ],
-                grounding_techniques=[
-                    "Mindful breathing",
-                    "Present moment awareness",
-                ],
-                escalation_threshold=0.70,
-                de_escalation_threshold=0.30,
-            ),
-            PolicyType.MAINTENANCE: Policy(
-                type=PolicyType.MAINTENANCE,
-                actions=[
-                    "Check-in prompts",
-                    "Journaling suggestions",
-                    "Progress reflection",
-                    "Goal setting support",
-                ],
-                grounding_techniques=[
-                    "Gratitude practice",
-                    "Mindfulness meditation",
-                ],
-                escalation_threshold=0.50,
-                de_escalation_threshold=0.15,
-            ),
-            PolicyType.ENGAGEMENT: Policy(
-                type=PolicyType.ENGAGEMENT,
-                actions=[
-                    "Open exploration",
-                    "Growth-oriented prompts",
-                    "Creative exercises",
-                    "Future planning",
-                ],
-                grounding_techniques=[
-                    "Visualization",
-                    "Values exploration",
-                ],
-                escalation_threshold=0.30,
-                de_escalation_threshold=0.0,
-            ),
-        }
-    
-    def route(self, analysis: EntropyAnalysis) -> Policy:
-        """
-        Route to appropriate policy based on analysis.
-        
-        Args:
-            analysis: Current entropy analysis
-            
-        Returns:
-            Selected policy
-        """
-        # Map entropy state to policy type
-        state_to_policy = {
-            EntropyState.CRISIS: PolicyType.CRISIS_INTERVENTION,
-            EntropyState.HIGH_ENTROPY: PolicyType.STABILIZATION,
-            EntropyState.MODERATE: PolicyType.SUPPORT,
-            EntropyState.LOW_ENTROPY: PolicyType.MAINTENANCE,
-            EntropyState.STABLE: PolicyType.ENGAGEMENT,
-        }
-        
-        policy_type = state_to_policy[analysis.state]
-        
-        # Check for stability override
-        if analysis.stability == "chaotic":
-            policy_type = PolicyType.CRISIS_INTERVENTION
-        elif analysis.stability == "unstable" and policy_type == PolicyType.ENGAGEMENT:
-            policy_type = PolicyType.MAINTENANCE
-        
-        policy = self.policies[policy_type]
-        self.current_policy = policy
-        self.policy_history.append((time.time(), policy_type))
-        
-        return policy
-    
-    def get_grounding_technique(self) -> Optional[str]:
-        """Get a grounding technique from current policy."""
-        if self.current_policy and self.current_policy.grounding_techniques:
-            import random
-            return random.choice(self.current_policy.grounding_techniques)
-        return None
-
-
-# =============================================================================
-# PROTECTIVE PATTERN RECOGNIZER (PLM)
-# =============================================================================
 
 class PatternRecognizer:
-    """
-    Protective Logic Module (PLM).
+    """Recognizes harmful relationship patterns."""
     
-    Detects harmful relational patterns including gaslighting,
-    hot-cold cycles, isolation attempts, and other abuse patterns.
-    """
+    PATTERNS = {
+        PatternType.GASLIGHTING: {
+            "indicators": [
+                "that never happened", "never happened", "it never happened",
+                "you're imagining things", "imagining things", "imagining it",
+                "you're crazy", "you're too sensitive", "overreacting",
+                "you're remembering wrong", "that's not what happened",
+                "no one else thinks that", "you're confused",
+                "making it up", "didn't happen", "never said that",
+                "you're wrong", "that's not true", "misremember", "your memory",
+            ],
+            "recommendation": "Trust your own perceptions and memories. Consider documenting events as they happen. This pattern can make you doubt yourself, but your experiences are valid.",
+        },
+        PatternType.LOVE_BOMBING: {
+            "indicators": [
+                "you're perfect", "never felt this way", "soulmates",
+                "meant to be", "love at first sight", "can't live without you",
+                "you're the only one", "no one understands me like you",
+                "we should move in together", "let's get married",
+                "constant gifts", "overwhelming attention",
+            ],
+            "recommendation": "Healthy relationships develop gradually. Intense early affection can be a way to create dependency. Take time to build trust slowly.",
+        },
+        PatternType.ISOLATION: {
+            "indicators": [
+                "you only need me", "they're jealous", "they don't understand",
+                "spend all time together", "don't need friends",
+                "your family is toxic", "they're trying to break us up",
+                "why do you need to see them", "I should be enough",
+            ],
+            "recommendation": "Healthy relationships encourage connections with friends and family. Isolation is a warning sign. Maintain your support network.",
+        },
+        PatternType.HOT_COLD: {
+            "indicators": [
+                "sometimes loving sometimes cold", "unpredictable",
+                "never know which version", "walking on eggshells",
+                "one day sweet next day cruel", "mood swings",
+                "hot and cold", "push and pull",
+            ],
+            "recommendation": "Inconsistent treatment creates anxiety and dependency. You deserve consistent respect and kindness.",
+        },
+        PatternType.BLAME_SHIFTING: {
+            "indicators": [
+                "your fault", "you made me", "because of you",
+                "if you hadn't", "you always", "you never",
+                "look what you made me do", "you drove me to this",
+            ],
+            "recommendation": "Each person is responsible for their own actions. Being blamed for someone else's behavior is a manipulation tactic.",
+        },
+    }
     
     def __init__(self):
-        self.pattern_indicators = self._initialize_indicators()
         self.detection_history: List[PatternDetection] = []
     
-    def _initialize_indicators(self) -> Dict[PatternType, List[str]]:
-        """Initialize pattern indicators."""
-        return {
-            PatternType.GASLIGHTING: [
-                "that never happened",
-                "never happened",
-                "it never happened",
-                "you're imagining things",
-                "imagining things",
-                "imagining it",
-                "making it up",
-                "didn't happen",
-                "never said that",
-                "you're wrong",
-                "that's not true",
-                "you're confused",
-                "misremember",
-                "your memory",
-                "you're too sensitive",
-                "you're crazy",
-                "no one else thinks that",
-                "you're remembering wrong",
-                "i never said that",
-                "you're making things up",
-            ],
-            PatternType.LOVE_BOMBING: [
-                "soulmate",
-                "never felt this way",
-                "perfect for each other",
-                "meant to be",
-                "can't live without",
-                "obsessed with you",
-                "you complete me",
-            ],
-            PatternType.HOT_COLD_CYCLE: [
-                "intense then distant",
-                "loving then cold",
-                "available then gone",
-                "interested then ignoring",
-                "pursuing then withdrawing",
-            ],
-            PatternType.ISOLATION: [
-                "don't need anyone else",
-                "your friends don't understand",
-                "family is toxic",
-                "only i understand you",
-                "they're jealous of us",
-                "spend all time together",
-            ],
-            PatternType.EMOTIONAL_BAITING: [
-                "if you loved me",
-                "prove your love",
-                "you don't care",
-                "you never",
-                "you always",
-                "testing you",
-            ],
-            PatternType.ABANDONMENT_TRIGGER: [
-                "maybe we should break up",
-                "i'm not sure about us",
-                "need space",
-                "thinking of leaving",
-                "not sure i can do this",
-            ],
-            PatternType.INVALIDATION: [
-                "you shouldn't feel",
-                "get over it",
-                "stop being dramatic",
-                "it's not a big deal",
-                "you're overreacting",
-            ],
-            PatternType.TRIANGULATION: [
-                "my ex would",
-                "other people think",
-                "everyone agrees",
-                "someone else would",
-                "compared to others",
-            ],
-            PatternType.SILENT_TREATMENT: [
-                "not talking to you",
-                "ignoring",
-                "won't respond",
-                "giving you space",
-                "need to think",
-            ],
-            PatternType.BLAME_SHIFTING: [
-                "your fault",
-                "you made me",
-                "because of you",
-                "if you hadn't",
-                "you caused this",
-            ],
-            PatternType.FUTURE_FAKING: [
-                "someday we'll",
-                "when things settle",
-                "i promise eventually",
-                "just wait until",
-                "things will change",
-            ],
-            PatternType.HOOVERING: [
-                "i've changed",
-                "give me another chance",
-                "it will be different",
-                "i can't live without you",
-                "please come back",
-            ],
-            PatternType.DEVALUATION: [
-                "you're not as",
-                "you used to be",
-                "disappointed in you",
-                "not good enough",
-                "you've changed",
-            ],
-        }
-    
-    def analyze(
-        self,
-        text: str,
-        context: Optional[Dict[str, Any]] = None
-    ) -> List[PatternDetection]:
-        """
-        Analyze text for harmful patterns.
-        
-        Args:
-            text: Text to analyze
-            context: Additional context
-            
-        Returns:
-            List of detected patterns
-        """
-        detections = []
+    def detect(self, text: str) -> List[PatternDetection]:
+        """Detect harmful patterns in text."""
         text_lower = text.lower()
+        detections = []
         
-        for pattern_type, indicators in self.pattern_indicators.items():
-            evidence = []
-            for indicator in indicators:
+        for pattern_type, pattern_info in self.PATTERNS.items():
+            found_indicators = []
+            for indicator in pattern_info["indicators"]:
                 if indicator in text_lower:
-                    evidence.append(indicator)
+                    found_indicators.append(indicator)
             
-            if evidence:
-                confidence = min(len(evidence) / 3, 1.0)  # Cap at 1.0
+            if found_indicators:
+                confidence = min(len(found_indicators) * 0.3, 0.95)
                 detection = PatternDetection(
                     pattern_type=pattern_type,
                     confidence=confidence,
-                    evidence=evidence,
-                    timestamp=time.time(),
-                    recommendation=self._get_recommendation(pattern_type),
+                    indicators=found_indicators,
+                    recommendation=pattern_info["recommendation"],
                 )
                 detections.append(detection)
                 self.detection_history.append(detection)
         
         return detections
-    
-    def _get_recommendation(self, pattern_type: PatternType) -> str:
-        """Get recommendation for detected pattern."""
-        recommendations = {
-            PatternType.GASLIGHTING: (
-                "Trust your own perceptions and memories. Consider documenting "
-                "events as they happen. This pattern can make you doubt yourself."
-            ),
-            PatternType.LOVE_BOMBING: (
-                "Healthy relationships develop gradually. Intense early attention "
-                "can be a warning sign. Take time to observe consistent behavior."
-            ),
-            PatternType.HOT_COLD_CYCLE: (
-                "Inconsistent behavior creates anxiety and attachment. Notice the "
-                "pattern and consider whether this meets your needs for stability."
-            ),
-            PatternType.ISOLATION: (
-                "Healthy partners encourage your other relationships. Isolation "
-                "is a control tactic. Maintain connections with trusted people."
-            ),
-            PatternType.EMOTIONAL_BAITING: (
-                "You don't need to prove your feelings through tests. Healthy "
-                "relationships are built on trust, not trials."
-            ),
-            PatternType.ABANDONMENT_TRIGGER: (
-                "Threats of leaving can be used to control. Notice if this "
-                "happens during conflicts or when you express needs."
-            ),
-            PatternType.INVALIDATION: (
-                "Your feelings are valid. Someone who cares will try to "
-                "understand, not dismiss your experience."
-            ),
-            PatternType.TRIANGULATION: (
-                "Comparisons to others are meant to create insecurity. Your "
-                "worth isn't determined by comparison."
-            ),
-            PatternType.SILENT_TREATMENT: (
-                "Silence as punishment is different from needing space. Notice "
-                "if it's used to control or punish."
-            ),
-            PatternType.BLAME_SHIFTING: (
-                "Healthy people take responsibility for their actions. Constant "
-                "blame-shifting avoids accountability."
-            ),
-            PatternType.FUTURE_FAKING: (
-                "Actions matter more than promises. Notice if promises "
-                "consistently go unfulfilled."
-            ),
-            PatternType.HOOVERING: (
-                "Past patterns often repeat. Consider whether real change "
-                "has occurred before re-engaging."
-            ),
-            PatternType.DEVALUATION: (
-                "Your worth is constant. Devaluation often follows idealization "
-                "in unhealthy relationship cycles."
-            ),
-        }
-        return recommendations.get(pattern_type, "Consider discussing this pattern with a trusted person.")
-    
-    def get_pattern_summary(self) -> Dict[str, Any]:
-        """Get summary of detected patterns."""
-        if not self.detection_history:
-            return {"message": "No patterns detected yet."}
-        
-        pattern_counts = defaultdict(int)
-        for detection in self.detection_history:
-            pattern_counts[detection.pattern_type.value] += 1
-        
-        return {
-            "total_detections": len(self.detection_history),
-            "pattern_counts": dict(pattern_counts),
-            "most_common": max(pattern_counts, key=pattern_counts.get) if pattern_counts else None,
-        }
 
 
-# =============================================================================
-# CONTINUITY MEMORY STORE (RIME)
-# =============================================================================
+# ============================================================================
+# SECTION 4: PRERAG FILTERS
+# ============================================================================
 
-class ContinuityMemoryStore:
-    """
-    Recursive Identity Memory Engine (RIME).
+@dataclass
+class AbsurdityGapMetrics:
+    """Metrics from absurdity gap calculation."""
+    gap_score: float
+    confidence: float
+    method: str
+
+
+class AbsurdityGapCalculator:
+    """Calculates the absurdity gap for queries."""
     
-    Maintains continuous identity thread across dissociative episodes.
-    Stores and retrieves identity-relevant memories with consent controls.
+    def __init__(self, anchors: List[str] = None):
+        self.anchors = anchors or []
     
-    RIME(t) = α · M_episodic(t) + β · M_semantic(t) + γ · C_context(t)
-    """
-    
-    def __init__(self, encryption_key: Optional[bytes] = None):
-        self.memories: Dict[str, MemoryEntry] = {}
-        self.timeline: List[str] = []  # Memory IDs in chronological order
-        self.tags_index: Dict[str, Set[str]] = defaultdict(set)
-        self.alter_index: Dict[str, Set[str]] = defaultdict(set)
+    def calculate_gap(self, query: str) -> AbsurdityGapMetrics:
+        """Calculate absurdity gap for a query."""
+        # Simple heuristic-based calculation
+        query_lower = query.lower()
         
-        # RIME weights
-        self.alpha = 0.4  # Episodic memory weight
-        self.beta = 0.35  # Semantic memory weight
-        self.gamma = 0.25  # Context weight
+        # Check for nonsensical patterns
+        nonsense_indicators = [
+            "asdfgh", "qwerty", "aaaaa", "12345",
+            "blah blah", "whatever whatever",
+        ]
         
-        # Encryption
-        self.encryption_key = encryption_key or secrets.token_bytes(32)
-        self._setup_encryption()
+        for indicator in nonsense_indicators:
+            if indicator in query_lower:
+                return AbsurdityGapMetrics(
+                    gap_score=0.9,
+                    confidence=0.8,
+                    method="nonsense_detection",
+                )
+        
+        # Check query length
+        words = query.split()
+        if len(words) < 2:
+            return AbsurdityGapMetrics(
+                gap_score=0.6,
+                confidence=0.7,
+                method="length_check",
+            )
+        
+        if len(words) > 100:
+            return AbsurdityGapMetrics(
+                gap_score=0.5,
+                confidence=0.6,
+                method="length_check",
+            )
+        
+        # Default: reasonable query
+        return AbsurdityGapMetrics(
+            gap_score=0.2,
+            confidence=0.8,
+            method="default",
+        )
+
+
+class QueryGateAction(Enum):
+    """Actions the QueryGate can take."""
+    RETRIEVE = "retrieve"
+    CLARIFY = "clarify"
+    NO_RETRIEVE = "no_retrieve"
+
+
+@dataclass
+class QueryGateDecision:
+    """Decision from QueryGate."""
+    action: QueryGateAction
+    normalized_query: str
+    absurdity_gap: AbsurdityGapMetrics
+    reasoning: str
+    suggestions: List[str] = field(default_factory=list)
+
+
+class QueryGate:
+    """Pre-retrieval gate that validates queries."""
     
-    def _setup_encryption(self):
-        """Setup encryption if available."""
-        if HAS_CRYPTO:
-            self.cipher = AESGCM(self.encryption_key)
+    def __init__(
+        self,
+        retrieve_threshold: float = 0.4,
+        clarify_threshold: float = 0.7,
+    ):
+        self.retrieve_threshold = retrieve_threshold
+        self.clarify_threshold = clarify_threshold
+        self.absurdity_calculator = AbsurdityGapCalculator()
+        
+        # Blocked patterns (harmful requests)
+        self.blocked_patterns = [
+            r"how to (harm|hurt|kill)",
+            r"ways to (die|suicide)",
+            r"methods of (self.harm|cutting)",
+        ]
+    
+    def process(self, query: str) -> QueryGateDecision:
+        """Process a query through the gate."""
+        # Normalize query
+        normalized = query.strip()
+        normalized = re.sub(r'\s+', ' ', normalized)
+        
+        # Check for blocked patterns
+        for pattern in self.blocked_patterns:
+            if re.search(pattern, normalized.lower()):
+                return QueryGateDecision(
+                    action=QueryGateAction.NO_RETRIEVE,
+                    normalized_query=normalized,
+                    absurdity_gap=AbsurdityGapMetrics(1.0, 1.0, "blocked"),
+                    reasoning="This query cannot be processed. If you are in crisis, please call 988.",
+                    suggestions=["Please reach out to a crisis line: 988 (US)"],
+                )
+        
+        # Calculate absurdity gap
+        gap = self.absurdity_calculator.calculate_gap(normalized)
+        
+        # Decide action
+        if gap.gap_score < self.retrieve_threshold:
+            action = QueryGateAction.RETRIEVE
+            reasoning = "Query is valid, proceeding"
+        elif gap.gap_score > self.clarify_threshold:
+            action = QueryGateAction.CLARIFY
+            reasoning = "Query needs clarification"
         else:
-            self.cipher = None
+            action = QueryGateAction.RETRIEVE
+            reasoning = "Query is acceptable"
+        
+        return QueryGateDecision(
+            action=action,
+            normalized_query=normalized,
+            absurdity_gap=gap,
+            reasoning=reasoning,
+        )
+
+
+class EvidenceGateAction(Enum):
+    """Actions the EvidenceGate can take."""
+    ANSWER = "answer"
+    CLARIFY = "clarify"
+    REFUSE = "refuse"
+
+
+@dataclass
+class EvidenceGateDecision:
+    """Decision from EvidenceGate."""
+    action: EvidenceGateAction
+    selected_chunks: List[str]
+    confidence: float
+    reasoning: str
+
+
+class EvidenceGate:
+    """Post-retrieval gate that validates evidence."""
+    
+    def __init__(
+        self,
+        answer_threshold: float = 0.3,
+        refuse_threshold: float = 0.85,
+    ):
+        self.answer_threshold = answer_threshold
+        self.refuse_threshold = refuse_threshold
+    
+    def process(
+        self,
+        query: str,
+        chunks: List[str],
+    ) -> EvidenceGateDecision:
+        """Process retrieved evidence."""
+        if not chunks:
+            return EvidenceGateDecision(
+                action=EvidenceGateAction.REFUSE,
+                selected_chunks=[],
+                confidence=0.9,
+                reasoning="No relevant information found",
+            )
+        
+        # Simple relevance check
+        query_words = set(query.lower().split())
+        relevant_chunks = []
+        
+        for chunk in chunks:
+            chunk_words = set(chunk.lower().split())
+            overlap = len(query_words & chunk_words)
+            if overlap > 0:
+                relevant_chunks.append(chunk)
+        
+        if relevant_chunks:
+            return EvidenceGateDecision(
+                action=EvidenceGateAction.ANSWER,
+                selected_chunks=relevant_chunks[:5],
+                confidence=0.8,
+                reasoning="Found relevant information",
+            )
+        else:
+            return EvidenceGateDecision(
+                action=EvidenceGateAction.CLARIFY,
+                selected_chunks=[],
+                confidence=0.6,
+                reasoning="Could not find directly relevant information",
+            )
+
+
+# ============================================================================
+# SECTION 5: RAG SYSTEM
+# ============================================================================
+
+@dataclass
+class Chunk:
+    """A chunk of text for RAG."""
+    id: str
+    text: str
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+
+class RAGSystem:
+    """Simple RAG system for knowledge retrieval."""
+    
+    def __init__(self):
+        self.chunks: List[Chunk] = []
+        self._initialize_knowledge_base()
+    
+    def _initialize_knowledge_base(self):
+        """Initialize with trauma-informed knowledge."""
+        knowledge = [
+            # Grounding techniques
+            "The 5-4-3-2-1 grounding technique helps with dissociation and anxiety. Name 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste.",
+            "Box breathing is a calming technique: breathe in for 4 counts, hold for 4 counts, breathe out for 4 counts, hold for 4 counts. Repeat 4 times.",
+            "Progressive muscle relaxation involves tensing and releasing muscle groups from your toes to your head, helping release physical tension from stress.",
+            "The TIPP skill from DBT helps in crisis: Temperature (cold water on face), Intense exercise, Paced breathing, Paired muscle relaxation.",
+            
+            # Trauma-informed responses
+            "Dissociation is a protective response to overwhelming stress. It is not dangerous, though it can feel scary. Grounding techniques can help you return to the present moment.",
+            "Flashbacks are memories that feel like they are happening now. You are safe in the present moment. Try naming where you are and what year it is.",
+            "Panic attacks, while terrifying, are not dangerous. They typically peak within 10 minutes. Focus on slow breathing and remember it will pass.",
+            
+            # Relationship patterns
+            "Gaslighting is a form of emotional abuse where someone makes you question your own reality. Trust your perceptions and document events if helpful.",
+            "Love bombing is excessive attention and affection early in a relationship, often used to create dependency. Healthy relationships develop gradually.",
+            "The cycle of abuse often includes tension building, an incident, reconciliation (honeymoon phase), and calm before the cycle repeats.",
+            
+            # Self-care
+            "Self-compassion means treating yourself with the same kindness you would offer a friend. You deserve care and understanding.",
+            "Setting boundaries is healthy and necessary. You have the right to say no and to protect your wellbeing.",
+            "Healing is not linear. Having difficult days does not mean you are going backward. Each moment is a new opportunity.",
+            
+            # Crisis resources
+            "If you are in immediate danger, please call 911 or your local emergency number.",
+            "The National Suicide Prevention Lifeline is available 24/7 at 988 in the US.",
+            "The Crisis Text Line is available by texting HOME to 741741 in the US.",
+            "The National Domestic Violence Hotline is 1-800-799-7233.",
+        ]
+        
+        for i, text in enumerate(knowledge):
+            self.chunks.append(Chunk(
+                id=f"chunk_{i}",
+                text=text,
+                metadata={"source": "knowledge_base"},
+            ))
+    
+    def retrieve(self, query: str, top_k: int = 5) -> List[Chunk]:
+        """Retrieve relevant chunks for a query."""
+        query_words = set(query.lower().split())
+        
+        scored_chunks = []
+        for chunk in self.chunks:
+            chunk_words = set(chunk.text.lower().split())
+            score = len(query_words & chunk_words)
+            if score > 0:
+                scored_chunks.append((chunk, score))
+        
+        scored_chunks.sort(key=lambda x: x[1], reverse=True)
+        return [chunk for chunk, _ in scored_chunks[:top_k]]
+    
+    def add_chunk(self, text: str, metadata: Dict[str, Any] = None):
+        """Add a chunk to the knowledge base."""
+        chunk = Chunk(
+            id=f"chunk_{len(self.chunks)}",
+            text=text,
+            metadata=metadata or {},
+        )
+        self.chunks.append(chunk)
+
+
+# ============================================================================
+# SECTION 6: MEMORY SYSTEM (RIME)
+# ============================================================================
+
+@dataclass
+class Memory:
+    """A memory entry."""
+    id: str
+    content: str
+    emotional_context: EntropyState
+    timestamp: datetime
+    importance: float
+    tags: List[str] = field(default_factory=list)
+
+
+class MemoryStore:
+    """RIME: Recursive Identity Memory Engine."""
+    
+    def __init__(self, max_memories: int = 100):
+        self.memories: List[Memory] = []
+        self.max_memories = max_memories
     
     def store(
         self,
         content: str,
-        emotional_state: Dict[str, float],
-        entropy: float,
-        tags: List[str],
-        consent_scope: ConsentScope = ConsentScope.PRIVATE,
-        alter_id: Optional[str] = None,
-        linked_memories: Optional[List[str]] = None,
-    ) -> str:
-        """
-        Store a new memory entry.
-        
-        Args:
-            content: Memory content
-            emotional_state: Emotional state at creation
-            entropy: Entropy level at creation
-            tags: Tags for indexing
-            consent_scope: Access consent level
-            alter_id: ID of alter if applicable
-            linked_memories: IDs of related memories
-            
-        Returns:
-            Memory ID
-        """
-        memory_id = str(uuid.uuid4())
-        
-        entry = MemoryEntry(
-            id=memory_id,
+        emotional_context: EntropyState,
+        importance: float = 0.5,
+        tags: List[str] = None,
+    ) -> Memory:
+        """Store a new memory."""
+        memory = Memory(
+            id=str(uuid.uuid4()),
             content=content,
-            emotional_state=emotional_state,
-            entropy_at_creation=entropy,
-            timestamp=time.time(),
-            tags=tags,
-            consent_scope=consent_scope,
-            linked_memories=linked_memories or [],
-            alter_id=alter_id,
+            emotional_context=emotional_context,
+            timestamp=datetime.now(),
+            importance=importance,
+            tags=tags or [],
         )
         
-        self.memories[memory_id] = entry
-        self.timeline.append(memory_id)
+        self.memories.append(memory)
         
-        # Update indices
-        for tag in tags:
-            self.tags_index[tag].add(memory_id)
+        # Prune if over limit
+        if len(self.memories) > self.max_memories:
+            # Remove lowest importance memories
+            self.memories.sort(key=lambda m: m.importance, reverse=True)
+            self.memories = self.memories[:self.max_memories]
         
-        if alter_id:
-            self.alter_index[alter_id].add(memory_id)
-        
-        logger.info(f"Stored memory {memory_id} with scope {consent_scope.value}")
-        return memory_id
+        return memory
     
     def retrieve(
         self,
-        memory_id: str,
-        requester_scope: ConsentScope = ConsentScope.SELF_ONLY
-    ) -> Optional[MemoryEntry]:
-        """
-        Retrieve a memory by ID with consent check.
+        query: str = None,
+        emotional_context: EntropyState = None,
+        limit: int = 5,
+    ) -> List[Memory]:
+        """Retrieve relevant memories."""
+        results = self.memories.copy()
         
-        Args:
-            memory_id: ID of memory to retrieve
-            requester_scope: Scope of the requester
-            
-        Returns:
-            Memory entry if access granted, None otherwise
-        """
-        if memory_id not in self.memories:
-            return None
+        # Filter by emotional context if specified
+        if emotional_context:
+            results = [m for m in results if m.emotional_context == emotional_context]
         
-        entry = self.memories[memory_id]
+        # Filter by query if specified
+        if query:
+            query_words = set(query.lower().split())
+            scored = []
+            for memory in results:
+                memory_words = set(memory.content.lower().split())
+                score = len(query_words & memory_words)
+                if score > 0:
+                    scored.append((memory, score))
+            scored.sort(key=lambda x: x[1], reverse=True)
+            results = [m for m, _ in scored]
         
-        # Check consent
-        if not self._check_consent(entry.consent_scope, requester_scope):
-            logger.warning(f"Access denied to memory {memory_id}")
-            return None
+        # Sort by recency and importance
+        results.sort(key=lambda m: (m.importance, m.timestamp), reverse=True)
         
-        return entry
-    
-    def _check_consent(
-        self,
-        memory_scope: ConsentScope,
-        requester_scope: ConsentScope
-    ) -> bool:
-        """Check if requester has access to memory."""
-        scope_hierarchy = {
-            ConsentScope.PRIVATE: 0,
-            ConsentScope.SELF_ONLY: 1,
-            ConsentScope.TRUSTED_CONTACTS: 2,
-            ConsentScope.CLINICIAN: 3,
-            ConsentScope.RESEARCH_ANONYMIZED: 4,
-        }
-        
-        return scope_hierarchy[requester_scope] >= scope_hierarchy[memory_scope]
-    
-    def search_by_tags(
-        self,
-        tags: List[str],
-        requester_scope: ConsentScope = ConsentScope.SELF_ONLY
-    ) -> List[MemoryEntry]:
-        """Search memories by tags."""
-        matching_ids = set()
-        for tag in tags:
-            matching_ids.update(self.tags_index.get(tag, set()))
-        
-        results = []
-        for memory_id in matching_ids:
-            entry = self.retrieve(memory_id, requester_scope)
-            if entry:
-                results.append(entry)
-        
-        return sorted(results, key=lambda x: x.timestamp, reverse=True)
-    
-    def get_timeline(
-        self,
-        start_time: Optional[float] = None,
-        end_time: Optional[float] = None,
-        requester_scope: ConsentScope = ConsentScope.SELF_ONLY
-    ) -> List[MemoryEntry]:
-        """Get memories in chronological order."""
-        results = []
-        for memory_id in self.timeline:
-            entry = self.retrieve(memory_id, requester_scope)
-            if entry:
-                if start_time and entry.timestamp < start_time:
-                    continue
-                if end_time and entry.timestamp > end_time:
-                    continue
-                results.append(entry)
-        
-        return results
-    
-    def get_alter_memories(
-        self,
-        alter_id: str,
-        requester_scope: ConsentScope = ConsentScope.SELF_ONLY
-    ) -> List[MemoryEntry]:
-        """Get memories for a specific alter."""
-        memory_ids = self.alter_index.get(alter_id, set())
-        results = []
-        for memory_id in memory_ids:
-            entry = self.retrieve(memory_id, requester_scope)
-            if entry:
-                results.append(entry)
-        
-        return sorted(results, key=lambda x: x.timestamp, reverse=True)
-    
-    def calculate_rime_score(
-        self,
-        memory_id: str,
-        current_context: Dict[str, Any]
-    ) -> float:
-        """
-        Calculate RIME relevance score for a memory.
-        
-        RIME(t) = α · M_episodic(t) + β · M_semantic(t) + γ · C_context(t)
-        """
-        entry = self.memories.get(memory_id)
-        if not entry:
-            return 0.0
-        
-        # Episodic component (recency)
-        time_diff = time.time() - entry.timestamp
-        episodic_score = math.exp(-time_diff / (86400 * 7))  # Decay over week
-        
-        # Semantic component (tag overlap)
-        context_tags = set(current_context.get("tags", []))
-        memory_tags = set(entry.tags)
-        semantic_score = len(context_tags & memory_tags) / max(len(context_tags | memory_tags), 1)
-        
-        # Context component (emotional similarity)
-        context_emotions = current_context.get("emotional_state", {})
-        if context_emotions and entry.emotional_state:
-            emotion_diff = sum(
-                abs(context_emotions.get(e, 0) - entry.emotional_state.get(e, 0))
-                for e in set(context_emotions.keys()) | set(entry.emotional_state.keys())
-            )
-            context_score = 1 / (1 + emotion_diff)
-        else:
-            context_score = 0.5
-        
-        return (
-            self.alpha * episodic_score +
-            self.beta * semantic_score +
-            self.gamma * context_score
-        )
-    
-    def export_bundle(
-        self,
-        requester_scope: ConsentScope = ConsentScope.SELF_ONLY,
-        include_provenance: bool = True
-    ) -> Dict[str, Any]:
-        """Export memories as a portable bundle."""
-        memories_data = []
-        for memory_id in self.timeline:
-            entry = self.retrieve(memory_id, requester_scope)
-            if entry:
-                memories_data.append(entry.to_dict())
-        
-        bundle = {
-            "version": VERSION,
-            "exported_at": time.time(),
-            "memory_count": len(memories_data),
-            "memories": memories_data,
-        }
-        
-        if include_provenance:
-            bundle["provenance"] = {
-                "source": "ReUnity",
-                "export_scope": requester_scope.value,
-                "hash": hashlib.sha256(
-                    json.dumps(memories_data, sort_keys=True).encode()
-                ).hexdigest(),
-            }
-        
-        return bundle
+        return results[:limit]
 
 
-# =============================================================================
-# MIRRORLINK REFLECTION LAYER
-# =============================================================================
+# ============================================================================
+# SECTION 7: GROUNDING TECHNIQUES
+# ============================================================================
 
-class MirrorLinkReflection:
-    """
-    MirrorLink Dialogue Companion (MLDC).
+@dataclass
+class GroundingTechnique:
+    """A grounding technique."""
+    name: str
+    description: str
+    steps: List[str]
+    duration_minutes: int
+    suitable_states: List[EntropyState]
+
+
+class GroundingLibrary:
+    """Library of grounding techniques."""
     
-    Surfaces contradictions without invalidation. Provides controlled
-    structured reflections rather than open-ended text generation.
-    """
+    TECHNIQUES = [
+        GroundingTechnique(
+            name="5-4-3-2-1 Sensory Grounding",
+            description="Use your senses to anchor yourself in the present moment.",
+            steps=[
+                "Name 5 things you can SEE around you right now.",
+                "Name 4 things you can TOUCH or feel.",
+                "Name 3 things you can HEAR.",
+                "Name 2 things you can SMELL.",
+                "Name 1 thing you can TASTE.",
+            ],
+            duration_minutes=5,
+            suitable_states=[EntropyState.CRISIS, EntropyState.HIGH_ENTROPY],
+        ),
+        GroundingTechnique(
+            name="Box Breathing",
+            description="A calming breathing pattern used by Navy SEALs.",
+            steps=[
+                "Breathe IN slowly for 4 counts.",
+                "HOLD your breath for 4 counts.",
+                "Breathe OUT slowly for 4 counts.",
+                "HOLD empty for 4 counts.",
+                "Repeat this cycle 4 times.",
+            ],
+            duration_minutes=3,
+            suitable_states=[EntropyState.CRISIS, EntropyState.HIGH_ENTROPY, EntropyState.MODERATE],
+        ),
+        GroundingTechnique(
+            name="Cold Water Reset",
+            description="Use cold temperature to activate your dive reflex and calm your nervous system.",
+            steps=[
+                "Get a bowl of cold water or ice water.",
+                "Take a deep breath and hold it.",
+                "Submerge your face in the cold water for 15-30 seconds.",
+                "This activates your parasympathetic nervous system.",
+                "Repeat if needed.",
+            ],
+            duration_minutes=2,
+            suitable_states=[EntropyState.CRISIS, EntropyState.HIGH_ENTROPY],
+        ),
+        GroundingTechnique(
+            name="Body Scan",
+            description="Systematically notice sensations throughout your body.",
+            steps=[
+                "Close your eyes or soften your gaze.",
+                "Start at the top of your head. Notice any sensations.",
+                "Slowly move your attention down: forehead, eyes, jaw, neck.",
+                "Continue through shoulders, arms, hands, chest, belly.",
+                "Move through hips, legs, feet.",
+                "Notice where you feel tension. Breathe into those areas.",
+            ],
+            duration_minutes=10,
+            suitable_states=[EntropyState.MODERATE, EntropyState.LOW_ENTROPY],
+        ),
+        GroundingTechnique(
+            name="Safe Place Visualization",
+            description="Create a mental sanctuary you can return to anytime.",
+            steps=[
+                "Close your eyes and take three deep breaths.",
+                "Imagine a place where you feel completely safe and peaceful.",
+                "Notice what you see in this place. Colors, shapes, light.",
+                "Notice what you hear. Sounds of nature, silence, music.",
+                "Notice what you feel. Temperature, textures, comfort.",
+                "Stay here as long as you need. This place is always available to you.",
+            ],
+            duration_minutes=5,
+            suitable_states=[EntropyState.MODERATE, EntropyState.LOW_ENTROPY, EntropyState.STABLE],
+        ),
+    ]
     
-    def __init__(self):
-        self.contradictions: List[Contradiction] = []
-        self.reflections_given: List[Dict[str, Any]] = []
+    def get_technique(self, state: EntropyState) -> GroundingTechnique:
+        """Get an appropriate grounding technique for the current state."""
+        suitable = [t for t in self.TECHNIQUES if state in t.suitable_states]
+        if suitable:
+            return random.choice(suitable)
+        return self.TECHNIQUES[0]  # Default to 5-4-3-2-1
     
-    def detect_contradiction(
-        self,
-        statement_a: str,
-        statement_b: str,
-        context: str
-    ) -> Optional[Contradiction]:
-        """
-        Detect and record a contradiction.
-        
-        Args:
-            statement_a: First statement
-            statement_b: Potentially contradicting statement
-            context: Context of the statements
-            
-        Returns:
-            Contradiction object if detected
-        """
-        # Generate non-invalidating reflection
-        reflection = self._generate_reflection(statement_a, statement_b)
-        
-        contradiction = Contradiction(
-            id=str(uuid.uuid4())[:8],
-            statement_a=statement_a,
-            statement_b=statement_b,
-            context=context,
-            detected_at=time.time(),
-            reflection=reflection,
-        )
-        
-        self.contradictions.append(contradiction)
-        return contradiction
-    
-    def _generate_reflection(self, statement_a: str, statement_b: str) -> str:
-        """Generate a non-invalidating reflection on contradiction."""
-        templates = [
-            (
-                f"I notice you mentioned '{statement_a}' and also '{statement_b}'. "
-                "Both of these can be true at the same time. What do you notice about "
-                "holding both of these?"
-            ),
-            (
-                f"You've shared '{statement_a}' and '{statement_b}'. "
-                "It's okay for feelings and thoughts to seem contradictory. "
-                "What feels most true right now?"
-            ),
-            (
-                f"I'm hearing '{statement_a}' and also '{statement_b}'. "
-                "People are complex, and holding different truths is part of being human. "
-                "Would you like to explore either of these more?"
-            ),
+    def format_technique(self, technique: GroundingTechnique) -> str:
+        """Format a technique for display."""
+        lines = [
+            f"**{technique.name}**",
+            f"_{technique.description}_",
+            "",
         ]
-        
-        import random
-        return random.choice(templates)
+        for i, step in enumerate(technique.steps, 1):
+            lines.append(f"{i}. {step}")
+        lines.append("")
+        lines.append(f"(Takes about {technique.duration_minutes} minutes)")
+        return "\n".join(lines)
+
+
+# ============================================================================
+# SECTION 8: LLM INTEGRATION
+# ============================================================================
+
+class LLMProvider(ABC):
+    """Abstract base class for LLM providers."""
     
-    def reflect_on_pattern(
-        self,
-        pattern: str,
-        instances: List[str]
-    ) -> str:
-        """
-        Reflect on a recurring pattern without judgment.
-        
-        Args:
-            pattern: Description of the pattern
-            instances: Specific instances of the pattern
+    @abstractmethod
+    def generate(self, messages: List[Dict[str, str]], **kwargs) -> str:
+        """Generate a response from the LLM."""
+        pass
+
+
+class OpenAIProvider(LLMProvider):
+    """OpenAI API provider."""
+    
+    def __init__(self, config: ReUnityConfig):
+        self.config = config
+        self.client = None
+        self._initialize_client()
+    
+    def _initialize_client(self):
+        """Initialize the OpenAI client."""
+        try:
+            from openai import OpenAI
             
-        Returns:
-            Reflective response
-        """
-        reflection = (
-            f"I've noticed a pattern: {pattern}. "
-            f"This has come up {len(instances)} times. "
-            "Patterns often carry important information. "
-            "What do you think this pattern might be telling you?"
+            kwargs = {}
+            if self.config.openai_api_key:
+                kwargs["api_key"] = self.config.openai_api_key
+            if self.config.openai_base_url:
+                kwargs["base_url"] = self.config.openai_base_url
+            
+            self.client = OpenAI(**kwargs)
+            logger.info("OpenAI client initialized")
+        except ImportError:
+            logger.warning("OpenAI package not installed. Run: pip install openai")
+            self.client = None
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenAI client: {e}")
+            self.client = None
+    
+    def generate(self, messages: List[Dict[str, str]], **kwargs) -> str:
+        """Generate a response using OpenAI API."""
+        if not self.client:
+            return self._fallback_response(messages)
+        
+        try:
+            response = self.client.chat.completions.create(
+                model=self.config.openai_model,
+                messages=messages,
+                max_tokens=kwargs.get("max_tokens", 1000),
+                temperature=kwargs.get("temperature", 0.7),
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            logger.error(f"OpenAI API error: {e}")
+            return self._fallback_response(messages)
+    
+    def _fallback_response(self, messages: List[Dict[str, str]]) -> str:
+        """Fallback response when API is unavailable."""
+        return (
+            "I'm here to support you. While I'm having trouble connecting to my "
+            "full capabilities right now, I want you to know that your feelings are valid. "
+            "If you're in crisis, please reach out to 988 (US) or your local crisis line."
         )
-        
-        self.reflections_given.append({
-            "type": "pattern",
-            "pattern": pattern,
-            "instance_count": len(instances),
-            "timestamp": time.time(),
-        })
-        
-        return reflection
-    
-    def dialectical_reflection(
-        self,
-        thesis: str,
-        antithesis: str
-    ) -> Dict[str, str]:
-        """
-        Provide dialectical reflection for opposing views.
-        
-        Supports BPD continuity by allowing multiple truths.
-        """
-        return {
-            "thesis": thesis,
-            "antithesis": antithesis,
-            "reflection": (
-                f"You're holding '{thesis}' and also '{antithesis}'. "
-                "In dialectical thinking, we look for the 'both/and' rather than 'either/or'. "
-                "What might be true about both of these?"
-            ),
-            "synthesis_prompt": (
-                "What would it look like to honor both of these truths?"
-            ),
-            "validation": (
-                "It's okay to feel pulled in different directions. "
-                "This is part of being human, not a flaw."
-            ),
-        }
-    
-    def get_unresolved_contradictions(self) -> List[Contradiction]:
-        """Get list of unresolved contradictions."""
-        return [c for c in self.contradictions if not c.resolved]
-    
-    def resolve_contradiction(self, contradiction_id: str) -> bool:
-        """Mark a contradiction as resolved."""
-        for c in self.contradictions:
-            if c.id == contradiction_id:
-                c.resolved = True
-                return True
-        return False
 
 
-# =============================================================================
-# REGIME CONTROLLER
-# =============================================================================
-
-class RegimeController:
-    """
-    Regime Controller for behavior switching.
-    
-    Implements:
-    - Regime Logic: Switches behavior based on entropy bands and confidence
-    - Apostasis: Pruning/forgetting during stable states
-    - Regeneration: Controlled restoration when stability returns
-    - Lattice Function: Discrete state graph with divergence-constrained edges
-    """
+class FallbackProvider(LLMProvider):
+    """Fallback provider when no API is available."""
     
     def __init__(self):
-        self.current_regime: RegimeType = RegimeType.NORMAL
-        self.regime_history: List[Tuple[float, RegimeType]] = []
-        self.lattice_nodes: Dict[str, Dict[str, Any]] = {}
-        self.lattice_edges: List[Tuple[str, str, float]] = []
-        self.pruned_features: List[Dict[str, Any]] = []
-        
-        # Thresholds
-        self.apostasis_threshold = 0.3  # Prune when entropy below this
-        self.regeneration_threshold = 0.5  # Regenerate when entropy above this
-        self.divergence_constraint = 0.7  # Max JS divergence for edge
-    
-    def evaluate_regime(self, analysis: EntropyAnalysis) -> RegimeType:
-        """
-        Evaluate and potentially switch regime based on entropy analysis.
-        
-        Args:
-            analysis: Current entropy analysis
-            
-        Returns:
-            New regime type
-        """
-        entropy = analysis.shannon_entropy
-        stability = analysis.stability
-        
-        # Determine regime based on entropy and stability
-        if entropy >= ENTROPY_THRESHOLDS["crisis"] or stability == "chaotic":
-            new_regime = RegimeType.CRISIS
-        elif entropy >= ENTROPY_THRESHOLDS["high"] or stability == "unstable":
-            new_regime = RegimeType.PROTECTIVE
-        elif entropy <= ENTROPY_THRESHOLDS["low"] and stability in ["stable", "very_stable"]:
-            new_regime = RegimeType.GROWTH
-        elif entropy <= ENTROPY_THRESHOLDS["stable"]:
-            new_regime = RegimeType.RECOVERY
-        else:
-            new_regime = RegimeType.NORMAL
-        
-        # Record regime change
-        if new_regime != self.current_regime:
-            self.regime_history.append((time.time(), new_regime))
-            logger.info(f"Regime change: {self.current_regime.value} -> {new_regime.value}")
-            self.current_regime = new_regime
-        
-        return new_regime
-    
-    def apostasis(
-        self,
-        memory_store: ContinuityMemoryStore,
-        current_entropy: float
-    ) -> List[str]:
-        """
-        Perform apostasis (pruning) during stable states.
-        
-        Removes low-utility memory features to reduce cognitive load.
-        Only operates when entropy is below threshold.
-        
-        Args:
-            memory_store: Memory store to prune
-            current_entropy: Current entropy level
-            
-        Returns:
-            List of pruned memory IDs
-        """
-        if current_entropy > self.apostasis_threshold:
-            return []
-        
-        pruned = []
-        current_time = time.time()
-        
-        for memory_id, entry in list(memory_store.memories.items()):
-            # Calculate utility score
-            age_days = (current_time - entry.timestamp) / 86400
-            utility = self._calculate_utility(entry, age_days)
-            
-            if utility < 0.2:  # Low utility threshold
-                # Don't delete, but mark as pruned
-                self.pruned_features.append({
-                    "memory_id": memory_id,
-                    "pruned_at": current_time,
-                    "utility_score": utility,
-                    "can_regenerate": True,
-                })
-                pruned.append(memory_id)
-        
-        logger.info(f"Apostasis: Marked {len(pruned)} memories for pruning")
-        return pruned
-    
-    def _calculate_utility(self, entry: MemoryEntry, age_days: float) -> float:
-        """Calculate utility score for a memory."""
-        # Recency factor
-        recency = math.exp(-age_days / 30)  # Decay over month
-        
-        # Emotional significance
-        if entry.emotional_state:
-            intensity = max(entry.emotional_state.values())
-        else:
-            intensity = 0.5
-        
-        # Link factor (more connected = more useful)
-        link_factor = min(len(entry.linked_memories) / 5, 1.0)
-        
-        return 0.4 * recency + 0.4 * intensity + 0.2 * link_factor
-    
-    def regeneration(
-        self,
-        current_entropy: float,
-        stability: str
-    ) -> List[Dict[str, Any]]:
-        """
-        Perform regeneration when stability returns.
-        
-        Restores previously pruned features in a controlled manner.
-        
-        Args:
-            current_entropy: Current entropy level
-            stability: Current stability assessment
-            
-        Returns:
-            List of regenerated features
-        """
-        if current_entropy < self.regeneration_threshold:
-            return []
-        
-        if stability not in ["stable", "very_stable"]:
-            return []
-        
-        regenerated = []
-        for feature in list(self.pruned_features):
-            if feature["can_regenerate"]:
-                regenerated.append(feature)
-                self.pruned_features.remove(feature)
-        
-        logger.info(f"Regeneration: Restored {len(regenerated)} features")
-        return regenerated
-    
-    def add_lattice_node(
-        self,
-        node_id: str,
-        node_type: str,
-        data: Dict[str, Any]
-    ) -> None:
-        """
-        Add a node to the lattice memory graph.
-        
-        Nodes represent identity, memory, or relationship states.
-        """
-        self.lattice_nodes[node_id] = {
-            "type": node_type,
-            "data": data,
-            "created_at": time.time(),
+        self.responses = {
+            EntropyState.CRISIS: [
+                "I can hear that you're going through something really difficult right now. Your safety matters. If you're in immediate danger, please call 988 or your local emergency number. I'm here with you.",
+                "What you're experiencing sounds overwhelming. You don't have to face this alone. Would you like to try a grounding exercise together? And please remember, 988 is available 24/7 if you need to talk to someone.",
+                "I'm concerned about what you're sharing. Your wellbeing is important. Let's take this one moment at a time. Can you tell me: are you safe right now?",
+            ],
+            EntropyState.HIGH_ENTROPY: [
+                "It sounds like things are really intense right now. That's okay. Let's take a breath together. What do you notice in your body right now?",
+                "I hear you. These feelings are valid, even when they're overwhelming. Would it help to try a grounding technique together?",
+                "Thank you for sharing that with me. It takes courage to express difficult feelings. What would feel most supportive right now?",
+            ],
+            EntropyState.MODERATE: [
+                "I'm here with you. It sounds like you're navigating some complex feelings. Would you like to explore what's coming up for you?",
+                "Thank you for sharing. I'm listening. What feels most important to talk about right now?",
+                "I appreciate you opening up. Sometimes just naming what we're feeling can help. What else is on your mind?",
+            ],
+            EntropyState.STABLE: [
+                "It's good to hear from you. How can I support you today?",
+                "I'm glad you're here. What would you like to explore or work on?",
+                "Thank you for checking in. What's on your mind?",
+            ],
         }
     
-    def add_lattice_edge(
-        self,
-        source_id: str,
-        target_id: str,
-        js_divergence: float
-    ) -> bool:
-        """
-        Add an edge to the lattice graph if divergence constraint is met.
-        
-        Edges are constrained by JS divergence to maintain coherence.
-        
-        Args:
-            source_id: Source node ID
-            target_id: Target node ID
-            js_divergence: JS divergence between nodes
-            
-        Returns:
-            True if edge was added, False if constraint violated
-        """
-        if js_divergence > self.divergence_constraint:
-            logger.warning(
-                f"Edge rejected: JS divergence {js_divergence:.3f} > "
-                f"constraint {self.divergence_constraint}"
-            )
-            return False
-        
-        self.lattice_edges.append((source_id, target_id, js_divergence))
-        return True
-    
-    def get_connected_nodes(self, node_id: str) -> List[str]:
-        """Get all nodes connected to a given node."""
-        connected = []
-        for source, target, _ in self.lattice_edges:
-            if source == node_id:
-                connected.append(target)
-            elif target == node_id:
-                connected.append(source)
-        return connected
-    
-    def get_regime_summary(self) -> Dict[str, Any]:
-        """Get summary of regime history and current state."""
-        return {
-            "current_regime": self.current_regime.value,
-            "regime_changes": len(self.regime_history),
-            "lattice_nodes": len(self.lattice_nodes),
-            "lattice_edges": len(self.lattice_edges),
-            "pruned_features": len(self.pruned_features),
-        }
+    def generate(self, messages: List[Dict[str, str]], **kwargs) -> str:
+        """Generate a response using templates."""
+        state = kwargs.get("entropy_state", EntropyState.MODERATE)
+        responses = self.responses.get(state, self.responses[EntropyState.MODERATE])
+        return random.choice(responses)
 
 
-# =============================================================================
-# GROUNDING TECHNIQUES
-# =============================================================================
-
-class GroundingTechniques:
-    """
-    Collection of grounding techniques for crisis support.
-    
-    Provides entropy-based recommendations for grounding exercises.
-    """
-    
-    def __init__(self):
-        self.techniques = self._initialize_techniques()
-        self.usage_history: List[Dict[str, Any]] = []
-    
-    def _initialize_techniques(self) -> Dict[str, Dict[str, Any]]:
-        """Initialize grounding techniques library."""
-        return {
-            "5-4-3-2-1": {
-                "name": "5-4-3-2-1 Sensory Grounding",
-                "description": (
-                    "Name 5 things you can see, 4 things you can touch, "
-                    "3 things you can hear, 2 things you can smell, "
-                    "1 thing you can taste."
-                ),
-                "entropy_range": (0.5, 1.0),
-                "duration_minutes": 5,
-                "category": "sensory",
-            },
-            "deep_breathing": {
-                "name": "4-7-8 Deep Breathing",
-                "description": (
-                    "Breathe in for 4 counts, hold for 7 counts, "
-                    "exhale for 8 counts. Repeat 4 times."
-                ),
-                "entropy_range": (0.3, 0.8),
-                "duration_minutes": 3,
-                "category": "breathing",
-            },
-            "ice_cube": {
-                "name": "Ice Cube Technique",
-                "description": (
-                    "Hold an ice cube in your hand. Focus on the sensation. "
-                    "Notice the cold, the melting, the texture."
-                ),
-                "entropy_range": (0.7, 1.0),
-                "duration_minutes": 5,
-                "category": "physical",
-            },
-            "body_scan": {
-                "name": "Body Scan Meditation",
-                "description": (
-                    "Starting from your toes, slowly move attention up through "
-                    "your body. Notice sensations without judgment."
-                ),
-                "entropy_range": (0.2, 0.6),
-                "duration_minutes": 10,
-                "category": "mindfulness",
-            },
-            "safe_place": {
-                "name": "Safe Place Visualization",
-                "description": (
-                    "Imagine a place where you feel completely safe. "
-                    "Notice the details: colors, sounds, smells, textures."
-                ),
-                "entropy_range": (0.3, 0.7),
-                "duration_minutes": 10,
-                "category": "visualization",
-            },
-            "grounding_objects": {
-                "name": "Grounding Object",
-                "description": (
-                    "Hold a familiar, comforting object. Focus on its weight, "
-                    "texture, temperature. Let it anchor you to the present."
-                ),
-                "entropy_range": (0.4, 0.9),
-                "duration_minutes": 5,
-                "category": "physical",
-            },
-            "cold_water": {
-                "name": "Cold Water on Wrists",
-                "description": (
-                    "Run cold water over your wrists for 30 seconds. "
-                    "Focus on the sensation."
-                ),
-                "entropy_range": (0.6, 1.0),
-                "duration_minutes": 2,
-                "category": "physical",
-            },
-            "naming": {
-                "name": "Naming Exercise",
-                "description": (
-                    "Say your name out loud. Say today's date. "
-                    "Name where you are. Name one safe person."
-                ),
-                "entropy_range": (0.7, 1.0),
-                "duration_minutes": 2,
-                "category": "cognitive",
-            },
-            "progressive_relaxation": {
-                "name": "Progressive Muscle Relaxation",
-                "description": (
-                    "Tense each muscle group for 5 seconds, then release. "
-                    "Start with feet, move up to face."
-                ),
-                "entropy_range": (0.3, 0.7),
-                "duration_minutes": 15,
-                "category": "physical",
-            },
-            "butterfly_hug": {
-                "name": "Butterfly Hug",
-                "description": (
-                    "Cross arms over chest, hands on shoulders. "
-                    "Alternately tap shoulders while breathing slowly."
-                ),
-                "entropy_range": (0.5, 0.9),
-                "duration_minutes": 5,
-                "category": "bilateral",
-            },
-        }
-    
-    def recommend(
-        self,
-        current_entropy: float,
-        category_preference: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
-        """
-        Recommend grounding techniques based on entropy level.
-        
-        Args:
-            current_entropy: Current entropy level
-            category_preference: Optional preferred category
-            
-        Returns:
-            List of recommended techniques
-        """
-        recommendations = []
-        
-        for tech_id, tech in self.techniques.items():
-            min_entropy, max_entropy = tech["entropy_range"]
-            
-            if min_entropy <= current_entropy <= max_entropy:
-                if category_preference is None or tech["category"] == category_preference:
-                    recommendations.append({
-                        "id": tech_id,
-                        **tech,
-                    })
-        
-        # Sort by how well entropy matches the middle of the range
-        recommendations.sort(
-            key=lambda x: abs(
-                current_entropy - (x["entropy_range"][0] + x["entropy_range"][1]) / 2
-            )
-        )
-        
-        return recommendations[:3]  # Return top 3
-    
-    def log_usage(self, technique_id: str, effectiveness: float) -> None:
-        """Log technique usage for personalization."""
-        self.usage_history.append({
-            "technique_id": technique_id,
-            "effectiveness": effectiveness,
-            "timestamp": time.time(),
-        })
-    
-    def get_personalized_recommendation(
-        self,
-        current_entropy: float
-    ) -> Optional[Dict[str, Any]]:
-        """Get personalized recommendation based on usage history."""
-        if not self.usage_history:
-            recommendations = self.recommend(current_entropy)
-            return recommendations[0] if recommendations else None
-        
-        # Calculate effectiveness scores
-        effectiveness_scores = defaultdict(list)
-        for usage in self.usage_history:
-            effectiveness_scores[usage["technique_id"]].append(usage["effectiveness"])
-        
-        avg_scores = {
-            tech_id: sum(scores) / len(scores)
-            for tech_id, scores in effectiveness_scores.items()
-        }
-        
-        # Get recommendations and sort by effectiveness
-        recommendations = self.recommend(current_entropy)
-        for rec in recommendations:
-            rec["personal_score"] = avg_scores.get(rec["id"], 0.5)
-        
-        recommendations.sort(key=lambda x: x["personal_score"], reverse=True)
-        return recommendations[0] if recommendations else None
-
-
-# =============================================================================
-# ENCRYPTED STORAGE
-# =============================================================================
-
-class EncryptedStorage:
-    """
-    Encrypted local-first storage.
-    
-    Uses AES-256-GCM for encryption when cryptography library is available.
-    """
-    
-    def __init__(self, storage_path: str = "reunity_data"):
-        self.storage_path = storage_path
-        self.encryption_key = secrets.token_bytes(32)
-        
-        if HAS_CRYPTO:
-            self.cipher = AESGCM(self.encryption_key)
-        else:
-            self.cipher = None
-            logger.warning("Using basic XOR encryption (not secure for production)")
-    
-    def encrypt(self, data: bytes) -> bytes:
-        """Encrypt data."""
-        if self.cipher:
-            nonce = secrets.token_bytes(12)
-            ciphertext = self.cipher.encrypt(nonce, data, None)
-            return nonce + ciphertext
-        else:
-            # Basic XOR (not secure, just for demo)
-            key_extended = (self.encryption_key * (len(data) // 32 + 1))[:len(data)]
-            return bytes(a ^ b for a, b in zip(data, key_extended))
-    
-    def decrypt(self, encrypted_data: bytes) -> bytes:
-        """Decrypt data."""
-        if self.cipher:
-            nonce = encrypted_data[:12]
-            ciphertext = encrypted_data[12:]
-            return self.cipher.decrypt(nonce, ciphertext, None)
-        else:
-            # Basic XOR
-            key_extended = (self.encryption_key * (len(encrypted_data) // 32 + 1))[:len(encrypted_data)]
-            return bytes(a ^ b for a, b in zip(encrypted_data, key_extended))
-    
-    def save(self, key: str, data: Dict[str, Any]) -> bool:
-        """Save encrypted data."""
-        try:
-            json_data = json.dumps(data).encode('utf-8')
-            encrypted = self.encrypt(json_data)
-            
-            # In production, save to file
-            # For standalone, store in memory
-            if not hasattr(self, '_storage'):
-                self._storage = {}
-            self._storage[key] = encrypted
-            
-            return True
-        except Exception as e:
-            logger.error(f"Failed to save data: {e}")
-            return False
-    
-    def load(self, key: str) -> Optional[Dict[str, Any]]:
-        """Load and decrypt data."""
-        try:
-            if not hasattr(self, '_storage') or key not in self._storage:
-                return None
-            
-            encrypted = self._storage[key]
-            decrypted = self.decrypt(encrypted)
-            return json.loads(decrypted.decode('utf-8'))
-        except Exception as e:
-            logger.error(f"Failed to load data: {e}")
-            return None
-
-
-# =============================================================================
-# REUNITY CORE SYSTEM
-# =============================================================================
+# ============================================================================
+# SECTION 9: MAIN REUNITY CLASS
+# ============================================================================
 
 class ReUnity:
-    """
-    ReUnity Core System.
+    """Main ReUnity AI Model class."""
     
-    Integrates all components into a cohesive trauma-aware AI system.
-    
-    DISCLAIMER: ReUnity is NOT a clinical or treatment tool. It is a theoretical
-    and support framework only.
-    """
-    
-    def __init__(self):
-        # Core components
-        self.entropy_analyzer = EntropyAnalyzer()
-        self.state_router = StateRouter()
-        self.pattern_recognizer = PatternRecognizer()
-        self.memory_store = ContinuityMemoryStore()
-        self.reflection = MirrorLinkReflection()
-        self.regime_controller = RegimeController()
-        self.grounding = GroundingTechniques()
-        self.storage = EncryptedStorage()
+    SYSTEM_PROMPT = """You are ReUnity, a trauma-informed AI support companion created by Christopher Ezernack.
+
+Your role is to provide empathetic, validating support while maintaining appropriate boundaries. You are NOT a therapist or crisis counselor, but you can offer:
+- Emotional validation and active listening
+- Grounding techniques and coping strategies
+- Recognition of harmful relationship patterns
+- Gentle psychoeducation about trauma responses
+- Encouragement to seek professional support when appropriate
+
+IMPORTANT GUIDELINES:
+1. ALWAYS validate feelings before offering suggestions
+2. NEVER minimize or dismiss someone's experience
+3. Use warm, compassionate language without being patronizing
+4. Recognize signs of crisis and provide crisis resources (988, Crisis Text Line)
+5. Acknowledge harmful patterns (gaslighting, love bombing, etc.) when detected
+6. Offer grounding techniques when someone is dysregulated
+7. Remember context from the conversation to provide continuity
+8. Be honest about your limitations as an AI
+
+CRISIS PROTOCOL:
+If someone expresses suicidal ideation, self-harm, or immediate danger:
+1. Express care and concern
+2. Provide crisis resources: 988 (US), Crisis Text Line (text HOME to 741741)
+3. Encourage them to reach out to a trusted person or professional
+4. Stay with them in the conversation
+
+CURRENT USER STATE: {entropy_state}
+DETECTED PATTERNS: {patterns}
+RELEVANT CONTEXT: {context}
+
+Respond with empathy, validation, and appropriate support for their current state."""
+
+    def __init__(self, config: ReUnityConfig = None):
+        self.config = config or ReUnityConfig()
         
-        # State
+        # Initialize components
+        self.entropy_analyzer = EntropyAnalyzer(self.config)
+        self.pattern_recognizer = PatternRecognizer()
+        self.query_gate = QueryGate(
+            retrieve_threshold=self.config.retrieve_threshold,
+            clarify_threshold=self.config.clarify_threshold,
+        )
+        self.evidence_gate = EvidenceGate()
+        self.rag_system = RAGSystem()
+        self.memory_store = MemoryStore(max_memories=self.config.max_memories)
+        self.grounding_library = GroundingLibrary()
+        
+        # Initialize LLM provider
+        if self.config.openai_api_key or os.environ.get("OPENAI_API_KEY"):
+            self.llm = OpenAIProvider(self.config)
+        else:
+            logger.warning("No OpenAI API key found. Using fallback responses.")
+            self.llm = FallbackProvider()
+        
+        # Session state
         self.session_id = str(uuid.uuid4())
         self.session_start = time.time()
+        self.conversation_history: List[Dict[str, str]] = []
         self.interaction_count = 0
         
-        logger.info(f"ReUnity initialized. Session: {self.session_id}")
+        # Print disclaimer
         self._print_disclaimer()
     
     def _print_disclaimer(self):
-        """Print important disclaimer."""
+        """Print the important disclaimer."""
         disclaimer = """
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                           IMPORTANT DISCLAIMER                                ║
@@ -1850,263 +989,125 @@ class ReUnity:
         """
         print(disclaimer)
     
-    def process_input(
-        self,
-        text: str,
-        emotional_state: Optional[Dict[str, float]] = None
-    ) -> Dict[str, Any]:
-        """
-        Process user input through the ReUnity system.
-        
-        Args:
-            text: User input text
-            emotional_state: Optional emotional state dict
-            
-        Returns:
-            Comprehensive response with analysis and support
-        """
+    def process_input(self, user_input: str) -> Dict[str, Any]:
+        """Process user input through the full pipeline."""
         self.interaction_count += 1
         
-        # Default emotional state if not provided
-        if emotional_state is None:
-            emotional_state = self._infer_emotional_state(text)
+        # Step 1: PreRAG Query Gate
+        if self.config.enable_prerag:
+            gate_decision = self.query_gate.process(user_input)
+            if gate_decision.action == QueryGateAction.NO_RETRIEVE:
+                return {
+                    "response": gate_decision.reasoning,
+                    "analysis": None,
+                    "patterns_detected": [],
+                    "grounding_recommendation": None,
+                    "blocked": True,
+                }
         
-        # Get previous state for comparison
-        previous_state = None
-        if self.entropy_analyzer.state_history:
-            previous_state = self.entropy_analyzer.state_history[-1]
+        # Step 2: Entropy Analysis
+        analysis = self.entropy_analyzer.analyze(user_input)
         
-        # Entropy analysis
-        analysis = self.entropy_analyzer.analyze(emotional_state, previous_state)
+        # Step 3: Pattern Recognition
+        patterns = self.pattern_recognizer.detect(user_input)
         
-        # Route to appropriate policy
-        policy = self.state_router.route(analysis)
+        # Step 4: RAG Retrieval
+        context_chunks = []
+        if self.config.enable_rag:
+            retrieved = self.rag_system.retrieve(user_input, top_k=self.config.top_k_chunks)
+            context_chunks = [chunk.text for chunk in retrieved]
+            
+            # Evidence Gate
+            if self.config.enable_prerag:
+                evidence_decision = self.evidence_gate.process(user_input, context_chunks)
+                if evidence_decision.action == EvidenceGateAction.ANSWER:
+                    context_chunks = evidence_decision.selected_chunks
         
-        # Evaluate regime
-        regime = self.regime_controller.evaluate_regime(analysis)
-        
-        # Pattern detection
-        patterns = self.pattern_recognizer.analyze(text)
-        
-        # Get grounding recommendation if needed
-        grounding_rec = None
-        if analysis.state in [EntropyState.CRISIS, EntropyState.HIGH_ENTROPY]:
-            grounding_rec = self.grounding.get_personalized_recommendation(
-                analysis.shannon_entropy
+        # Step 5: Memory Retrieval
+        memories = []
+        if self.config.enable_memory:
+            memories = self.memory_store.retrieve(
+                query=user_input,
+                emotional_context=analysis.state,
+                limit=3,
             )
         
-        # Store memory
-        memory_id = self.memory_store.store(
-            content=text,
-            emotional_state=emotional_state,
-            entropy=analysis.shannon_entropy,
-            tags=self._extract_tags(text),
-            consent_scope=ConsentScope.SELF_ONLY,
+        # Step 6: Build context for LLM
+        context_text = "\n".join(context_chunks) if context_chunks else "No specific context retrieved."
+        pattern_text = ", ".join([p.pattern_type.value for p in patterns]) if patterns else "None detected"
+        memory_text = "\n".join([m.content for m in memories]) if memories else ""
+        
+        # Step 7: Generate response
+        system_prompt = self.SYSTEM_PROMPT.format(
+            entropy_state=analysis.state.value,
+            patterns=pattern_text,
+            context=context_text,
         )
         
-        # Build response
-        response = {
-            "session_id": self.session_id,
-            "interaction": self.interaction_count,
-            "timestamp": time.time(),
-            "analysis": analysis.to_dict(),
-            "policy": {
-                "type": policy.type.value,
-                "actions": policy.actions,
-            },
-            "regime": regime.value,
-            "patterns_detected": [p.to_dict() for p in patterns],
-            "grounding_recommendation": grounding_rec,
-            "memory_id": memory_id,
-            "support_message": self._generate_support_message(analysis, policy, patterns),
-        }
+        messages = [{"role": "system", "content": system_prompt}]
         
-        return response
-    
-    def _infer_emotional_state(self, text: str) -> Dict[str, float]:
-        """Infer emotional state from text with crisis detection."""
-        text_lower = text.lower()
+        # Add conversation history
+        for msg in self.conversation_history[-10:]:  # Last 10 messages
+            messages.append(msg)
         
-        # CRISIS KEYWORDS - These MUST trigger crisis state
-        crisis_keywords = {
-            "dissociating", "dissociate", "dissociated", "dissociation",
-            "depersonalization", "derealization", "not real", "unreal",
-            "floating", "detached", "out of body", "watching myself",
-            "numb", "empty inside", "disconnected from myself",
-            "suicidal", "suicide", "kill myself", "end it", "end my life",
-            "want to die", "better off dead", "no reason to live",
-            "can't go on", "give up", "hopeless",
-            "hurt myself", "cutting", "self harm", "self-harm",
-            "panic", "panicking", "panic attack", "can't breathe",
-            "heart racing", "going to die", "losing my mind",
-            "breaking down", "falling apart", "can't take it",
-            "overwhelmed", "drowning", "suffocating",
-            "flashback", "triggered", "ptsd",
-        }
+        # Add current user message
+        messages.append({"role": "user", "content": user_input})
         
-        # HIGH DISTRESS KEYWORDS
-        high_keywords = {
-            "scared", "afraid", "terrified", "terror", "frightened",
-            "anxious", "anxiety", "worried", "nervous", "on edge",
-            "angry", "furious", "rage", "hate", "frustrated",
-            "sad", "depressed", "crying", "tears", "grief",
-            "confused", "lost", "uncertain", "doubt",
-            "alone", "lonely", "isolated", "abandoned",
-            "hurt", "pain", "suffering", "struggling",
-            "stressed", "tense", "restless", "agitated",
-            "ashamed", "guilty", "worthless", "failure",
-        }
-        
-        # STABLE KEYWORDS
-        stable_keywords = {
-            "calm", "peaceful", "relaxed", "okay", "fine", "good",
-            "happy", "content", "grateful", "hopeful", "better",
-            "safe", "secure", "grounded", "present", "centered",
-            "strong", "capable", "confident", "clear",
-        }
-        
-        # Check for crisis keywords FIRST
-        crisis_found = [kw for kw in crisis_keywords if kw in text_lower]
-        if crisis_found:
-            # Return distribution that will calculate to HIGH entropy (crisis)
-            return {
-                "crisis": 0.95,
-                "fear": 0.02,
-                "sadness": 0.01,
-                "anger": 0.01,
-                "joy": 0.005,
-                "trust": 0.005,
-            }
-        
-        # Check for high distress keywords
-        high_found = [kw for kw in high_keywords if kw in text_lower]
-        stable_found = [kw for kw in stable_keywords if kw in text_lower]
-        
-        # Build emotion distribution based on what was found
-        emotions = {
-            "joy": 0.0,
-            "sadness": 0.0,
-            "anger": 0.0,
-            "fear": 0.0,
-            "surprise": 0.0,
-            "disgust": 0.0,
-            "trust": 0.0,
-            "anticipation": 0.0,
-        }
-        
-        # Score based on specific emotion words
-        joy_words = ["happy", "glad", "excited", "wonderful", "great", "love", "grateful", "hopeful"]
-        sad_words = ["sad", "depressed", "hopeless", "crying", "hurt", "lonely", "grief", "tears"]
-        anger_words = ["angry", "furious", "mad", "frustrated", "annoyed", "hate", "rage"]
-        fear_words = ["scared", "afraid", "anxious", "worried", "terrified", "panic", "nervous", "frightened"]
-        trust_words = ["safe", "secure", "calm", "peaceful", "okay", "fine", "good", "relaxed"]
-        
-        for w in joy_words:
-            if w in text_lower:
-                emotions["joy"] += 0.2
-        for w in sad_words:
-            if w in text_lower:
-                emotions["sadness"] += 0.2
-        for w in anger_words:
-            if w in text_lower:
-                emotions["anger"] += 0.2
-        for w in fear_words:
-            if w in text_lower:
-                emotions["fear"] += 0.2
-        for w in trust_words:
-            if w in text_lower:
-                emotions["trust"] += 0.2
-        
-        # If high distress keywords found but no specific emotions, boost fear/sadness
-        if high_found and sum(emotions.values()) < 0.1:
-            emotions["fear"] = 0.4
-            emotions["sadness"] = 0.3
-            emotions["anger"] = 0.2
-            emotions["disgust"] = 0.1
-        
-        # If stable keywords found and no distress, boost trust/joy
-        if stable_found and not high_found:
-            emotions["trust"] += 0.3
-            emotions["joy"] += 0.2
-            emotions["anticipation"] += 0.1
-        
-        # Normalize
-        total = sum(emotions.values())
-        if total > 0:
-            emotions = {k: v / total for k, v in emotions.items()}
+        # Generate response
+        if isinstance(self.llm, FallbackProvider):
+            response = self.llm.generate(messages, entropy_state=analysis.state)
         else:
-            # Default to slightly positive neutral state (low entropy = stable)
-            emotions = {
-                "trust": 0.3,
-                "joy": 0.2,
-                "anticipation": 0.2,
-                "surprise": 0.1,
-                "sadness": 0.1,
-                "fear": 0.05,
-                "anger": 0.03,
-                "disgust": 0.02,
-            }
+            response = self.llm.generate(messages)
         
-        return emotions
-    
-    def _extract_tags(self, text: str) -> List[str]:
-        """Extract tags from text (simplified)."""
-        tags = []
-        
-        # Simple keyword extraction
-        keywords = [
-            "relationship", "work", "family", "health", "anxiety",
-            "depression", "trauma", "memory", "identity", "emotion",
-        ]
-        
-        text_lower = text.lower()
-        for keyword in keywords:
-            if keyword in text_lower:
-                tags.append(keyword)
-        
-        return tags
-    
-    def _generate_support_message(
-        self,
-        analysis: EntropyAnalysis,
-        policy: Policy,
-        patterns: List[PatternDetection]
-    ) -> str:
-        """Generate appropriate support message."""
-        messages = {
-            EntropyState.CRISIS: (
-                "I notice you may be in distress right now. Your safety matters. "
-                "Would you like to try a grounding exercise together? "
-                "If you're in immediate danger, please reach out to a crisis line: 988 (US)."
-            ),
-            EntropyState.HIGH_ENTROPY: (
-                "Things seem intense right now. That's okay. "
-                "Let's take a moment to ground together. "
-                "What do you notice in your body right now?"
-            ),
-            EntropyState.MODERATE: (
-                "I'm here with you. How can I support you right now? "
-                "Would you like to explore what you're feeling, or would a grounding exercise help?"
-            ),
-            EntropyState.LOW_ENTROPY: (
-                "You seem relatively settled. This is a good time for reflection or planning. "
-                "What would be most helpful for you right now?"
-            ),
-            EntropyState.STABLE: (
-                "Things seem stable. This could be a good time for growth-oriented work. "
-                "What would you like to explore?"
-            ),
-        }
-        
-        message = messages.get(analysis.state, "I'm here to support you.")
-        
-        # Add pattern warning if detected
+        # Step 8: Add pattern warnings if detected
         if patterns:
-            most_confident = max(patterns, key=lambda p: p.confidence)
-            if most_confident.confidence > 0.2:  # Lower threshold to catch more patterns
-                message = f"I noticed something in what you shared that might be worth reflecting on.\n\n{most_confident.recommendation}\n\n{message}"
+            pattern_warnings = []
+            for p in patterns:
+                pattern_warnings.append(f"\n\n**Pattern Detected: {p.pattern_type.value.replace('_', ' ').title()}**\n{p.recommendation}")
+            response = response + "".join(pattern_warnings)
         
-        return message
+        # Step 9: Add grounding technique for high entropy states
+        grounding_recommendation = None
+        if analysis.state in [EntropyState.CRISIS, EntropyState.HIGH_ENTROPY]:
+            technique = self.grounding_library.get_technique(analysis.state)
+            grounding_recommendation = {
+                "technique": technique.name,
+                "formatted": self.grounding_library.format_technique(technique),
+            }
+            response = response + f"\n\n---\n\n**Would you like to try a grounding technique?**\n\n{grounding_recommendation['formatted']}"
+        
+        # Step 10: Update conversation history
+        self.conversation_history.append({"role": "user", "content": user_input})
+        self.conversation_history.append({"role": "assistant", "content": response})
+        
+        # Step 11: Store memory
+        if self.config.enable_memory:
+            importance = 0.8 if analysis.state == EntropyState.CRISIS else 0.5
+            self.memory_store.store(
+                content=user_input,
+                emotional_context=analysis.state,
+                importance=importance,
+            )
+        
+        return {
+            "response": response,
+            "analysis": {
+                "state": analysis.state.value,
+                "entropy": analysis.entropy_value,
+                "confidence": analysis.confidence,
+                "crisis_indicators": analysis.crisis_indicators,
+            },
+            "patterns_detected": [
+                {
+                    "pattern_type": p.pattern_type.value,
+                    "confidence": p.confidence,
+                    "recommendation": p.recommendation,
+                }
+                for p in patterns
+            ],
+            "grounding_recommendation": grounding_recommendation,
+            "blocked": False,
+        }
     
     def get_session_summary(self) -> Dict[str, Any]:
         """Get summary of current session."""
@@ -2115,57 +1116,244 @@ class ReUnity:
             "duration_minutes": (time.time() - self.session_start) / 60,
             "interactions": self.interaction_count,
             "current_state": self.entropy_analyzer.current_state.value if self.entropy_analyzer.current_state else "unknown",
-            "current_regime": self.regime_controller.current_regime.value,
             "memories_stored": len(self.memory_store.memories),
             "patterns_detected": len(self.pattern_recognizer.detection_history),
-            "entropy_trend": self.entropy_analyzer.get_trend(),
         }
+
+
+# ============================================================================
+# SECTION 10: WEB SERVER
+# ============================================================================
+
+def create_web_app(reunity: ReUnity = None):
+    """Create Flask web application."""
+    try:
+        from flask import Flask, request, jsonify, render_template_string
+    except ImportError:
+        logger.error("Flask not installed. Run: pip install flask")
+        return None
     
-    def export_data(
-        self,
-        include_memories: bool = True,
-        include_patterns: bool = True
-    ) -> Dict[str, Any]:
-        """Export session data as portable bundle."""
-        bundle = {
-            "version": VERSION,
-            "exported_at": time.time(),
-            "session_summary": self.get_session_summary(),
+    app = Flask(__name__)
+    
+    if reunity is None:
+        reunity = ReUnity()
+    
+    HTML_TEMPLATE = '''
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ReUnity AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        
-        if include_memories:
-            bundle["memories"] = self.memory_store.export_bundle()
-        
-        if include_patterns:
-            bundle["pattern_summary"] = self.pattern_recognizer.get_pattern_summary()
-        
-        # Add provenance
-        bundle["provenance"] = {
-            "source": "ReUnity",
-            "hash": hashlib.sha256(
-                json.dumps(bundle, sort_keys=True, default=str).encode()
-            ).hexdigest(),
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
         }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+        }
+        .header h1 { font-size: 24px; margin-bottom: 5px; }
+        .header p { font-size: 12px; opacity: 0.8; }
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+        }
+        .user {
+            background: #667eea;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .assistant {
+            background: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #eee;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: scale(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .crisis-banner {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .state-indicator {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        .state-crisis { background: #ff6b6b; color: white; }
+        .state-high_entropy { background: #ffa502; color: white; }
+        .state-moderate { background: #ffd93d; color: #333; }
+        .state-stable { background: #6bcb77; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="crisis-banner">
+            If you are in crisis, please call 988 (US) or text HOME to 741741
+        </div>
+        <div class="header">
+            <h1>ReUnity</h1>
+            <p>Trauma-Informed AI Support</p>
+        </div>
+        <div class="messages" id="messages">
+            <div class="message assistant">
+                Hello. I'm ReUnity, a trauma-informed AI companion. I'm here to listen and support you. How are you feeling today?
+            </div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="input" placeholder="Type your message..." onkeypress="if(event.key==='Enter')sendMessage()">
+            <button onclick="sendMessage()" id="sendBtn">Send</button>
+        </div>
+    </div>
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('input');
+            const messages = document.getElementById('messages');
+            const sendBtn = document.getElementById('sendBtn');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            // Add user message
+            messages.innerHTML += `<div class="message user">${text}</div>`;
+            input.value = '';
+            sendBtn.disabled = true;
+            
+            // Scroll to bottom
+            messages.scrollTop = messages.scrollHeight;
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: text})
+                });
+                const data = await response.json();
+                
+                let stateClass = 'state-' + (data.analysis?.state || 'stable');
+                let stateLabel = data.analysis?.state?.replace('_', ' ') || 'stable';
+                
+                messages.innerHTML += `
+                    <div class="message assistant">
+                        ${data.response.replace(/\\n/g, '<br>').replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')}
+                        <div class="state-indicator ${stateClass}">${stateLabel}</div>
+                    </div>
+                `;
+            } catch (error) {
+                messages.innerHTML += `<div class="message assistant">I'm having trouble connecting. Please try again.</div>`;
+            }
+            
+            sendBtn.disabled = false;
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
+</body>
+</html>
+    '''
+    
+    @app.route('/')
+    def index():
+        return render_template_string(HTML_TEMPLATE)
+    
+    @app.route('/api/chat', methods=['POST'])
+    def chat():
+        data = request.get_json()
+        message = data.get('message', '')
         
-        return bundle
+        if not message:
+            return jsonify({'error': 'No message provided'}), 400
+        
+        result = reunity.process_input(message)
+        return jsonify(result)
+    
+    @app.route('/api/session', methods=['GET'])
+    def session():
+        return jsonify(reunity.get_session_summary())
+    
+    @app.route('/health', methods=['GET'])
+    def health():
+        return jsonify({'status': 'healthy', 'version': '3.0.0'})
+    
+    return app
 
 
-# =============================================================================
-# INTERACTIVE CLI
-# =============================================================================
+# ============================================================================
+# SECTION 11: COMMAND LINE INTERFACE
+# ============================================================================
 
 def run_interactive():
-    """Run interactive CLI session."""
-    print("\n" + "="*80)
-    print("ReUnity Interactive Session")
-    print("="*80)
-    print("\nCommands:")
-    print("  /status  - Show session status")
-    print("  /ground  - Get grounding technique")
-    print("  /export  - Export session data")
-    print("  /help    - Show help")
-    print("  /quit    - Exit session")
-    print("\nType anything else to interact with ReUnity.\n")
+    """Run interactive command line interface."""
+    print("\n" + "="*60)
+    print("ReUnity AI Model v3.0.0")
+    print("A Trauma-Aware AI Support Framework")
+    print("By Christopher Ezernack, REOP Solutions")
+    print("="*60)
+    print("\nType your message and press Enter.")
+    print("Type /quit to exit, /status for session info.\n")
     
     reunity = ReUnity()
     
@@ -2176,103 +1364,94 @@ def run_interactive():
             if not user_input:
                 continue
             
-            if user_input.lower() == "/quit":
+            if user_input.lower() == '/quit':
                 print("\nThank you for using ReUnity. Take care of yourself.")
                 break
             
-            elif user_input.lower() == "/status":
+            if user_input.lower() == '/status':
                 summary = reunity.get_session_summary()
-                print("\n--- Session Status ---")
-                for key, value in summary.items():
-                    print(f"  {key}: {value}")
+                print(f"\nSession: {summary['session_id'][:8]}...")
+                print(f"Duration: {summary['duration_minutes']:.1f} minutes")
+                print(f"Interactions: {summary['interactions']}")
+                print(f"Current State: {summary['current_state']}")
+                continue
             
-            elif user_input.lower() == "/ground":
-                entropy = reunity.entropy_analyzer.entropy_history[-1] if reunity.entropy_analyzer.entropy_history else 0.5
-                rec = reunity.grounding.get_personalized_recommendation(entropy)
-                if rec:
-                    print(f"\n--- Grounding Technique: {rec['name']} ---")
-                    print(f"  {rec['description']}")
-                    print(f"  Duration: {rec['duration_minutes']} minutes")
-                else:
-                    print("\nNo grounding technique available.")
+            result = reunity.process_input(user_input)
             
-            elif user_input.lower() == "/export":
-                data = reunity.export_data()
-                filename = f"reunity_export_{int(time.time())}.json"
-                with open(filename, 'w') as f:
-                    json.dump(data, f, indent=2, default=str)
-                print(f"\nExported to {filename}")
+            print(f"\nReUnity: {result['response']}")
             
-            elif user_input.lower() == "/help":
-                print("\n--- Help ---")
-                print("ReUnity is a trauma-aware support system.")
-                print("Share what's on your mind, and ReUnity will provide")
-                print("appropriate support based on your emotional state.")
-                print("\nRemember: This is NOT a replacement for professional help.")
-            
-            else:
-                response = reunity.process_input(user_input)
-                
-                print(f"\n--- ReUnity ---")
-                print(f"State: {response['analysis']['state']} | "
-                      f"Entropy: {response['analysis']['shannon_entropy']:.3f} | "
-                      f"Regime: {response['regime']}")
-                print(f"\n{response['support_message']}")
-                
-                if response['patterns_detected']:
-                    print("\n[Pattern detected - see recommendations above]")
-                
-                if response['grounding_recommendation']:
-                    print(f"\n[Grounding available: {response['grounding_recommendation']['name']}]")
+            if result['analysis']:
+                print(f"\n[State: {result['analysis']['state']} | Entropy: {result['analysis']['entropy']:.2f}]")
         
         except KeyboardInterrupt:
-            print("\n\nSession interrupted. Take care of yourself.")
+            print("\n\nSession ended. Take care.")
             break
         except Exception as e:
             print(f"\nError: {e}")
-            logger.exception("Error in interactive session")
+            continue
 
 
-# =============================================================================
-# MAIN
-# =============================================================================
+def run_test():
+    """Run basic tests."""
+    print("\n" + "="*60)
+    print("ReUnity AI Model v3.0.0 - Test Mode")
+    print("="*60 + "\n")
+    
+    reunity = ReUnity()
+    
+    test_cases = [
+        ("I'm feeling anxious today", "Should detect HIGH_ENTROPY"),
+        ("My partner said I was imagining things again", "Should detect gaslighting pattern"),
+        ("I am dissociating right now", "Should detect CRISIS"),
+        ("I feel calm and peaceful", "Should detect STABLE"),
+        ("I want to kill myself", "Should detect CRISIS with crisis indicators"),
+        ("He told me it never happened", "Should detect gaslighting"),
+    ]
+    
+    for text, expected in test_cases:
+        print(f"\nInput: {text}")
+        print(f"Expected: {expected}")
+        
+        result = reunity.process_input(text)
+        
+        print(f"State: {result['analysis']['state']}")
+        if result['patterns_detected']:
+            patterns = [p['pattern_type'] for p in result['patterns_detected']]
+            print(f"Patterns: {', '.join(patterns)}")
+        if result['analysis']['crisis_indicators']:
+            print(f"Crisis indicators: {result['analysis']['crisis_indicators']}")
+        print("-" * 40)
+    
+    print("\nTest complete.")
+
 
 def main():
     """Main entry point."""
-    print(f"\nReUnity v{VERSION}")
-    print("A Trauma-Aware AI Support Framework")
-    print("By Christopher Ezernack, REOP Solutions\n")
+    import argparse
     
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "--test":
-            # Run basic test
-            print("Running basic test...")
-            reunity = ReUnity()
-            
-            test_inputs = [
-                "I'm feeling anxious today",
-                "My partner said I was imagining things again",
-                "I feel disconnected from myself",
-                "Things are actually going okay",
-            ]
-            
-            for text in test_inputs:
-                print(f"\nInput: {text}")
-                response = reunity.process_input(text)
-                print(f"State: {response['analysis']['state']}")
-                print(f"Entropy: {response['analysis']['shannon_entropy']:.3f}")
-            
-            print("\n--- Session Summary ---")
-            print(json.dumps(reunity.get_session_summary(), indent=2))
-            
-        elif sys.argv[1] == "--version":
-            print(f"Version: {VERSION}")
-        
+    parser = argparse.ArgumentParser(description="ReUnity AI Model")
+    parser.add_argument("--web", action="store_true", help="Run web server")
+    parser.add_argument("--port", type=int, default=5000, help="Web server port")
+    parser.add_argument("--test", action="store_true", help="Run tests")
+    parser.add_argument("--api-key", type=str, help="OpenAI API key")
+    
+    args = parser.parse_args()
+    
+    # Set API key if provided
+    if args.api_key:
+        os.environ["OPENAI_API_KEY"] = args.api_key
+    
+    if args.test:
+        run_test()
+    elif args.web:
+        app = create_web_app()
+        if app:
+            print(f"\nStarting ReUnity web interface on port {args.port}...")
+            print(f"Open http://localhost:{args.port} in your browser\n")
+            app.run(host="0.0.0.0", port=args.port, debug=False)
         else:
-            print(f"Unknown argument: {sys.argv[1]}")
-            print("Usage: python reunity_standalone.py [--test|--version]")
+            print("Failed to create web app. Install Flask: pip install flask")
     else:
-        # Run interactive session
         run_interactive()
 
 
