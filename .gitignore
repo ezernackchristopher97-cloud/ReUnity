@@ -135,6 +135,11 @@ cython_debug/
 *.swo
 *~
 
+# Node.js
+node_modules/
+.manus*/
+pnpm-lock.yaml
+
 # ReUnity specific
 data/encrypted/
 data/exports/

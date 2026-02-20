@@ -1,0 +1,160 @@
+/**
+ * Authentication SDK for ReUnity
+ * Built by REOP Solutions - Custom email/password authentication
+ */
+
+import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { ForbiddenError } from "@shared/_core/errors";
+import { parse as parseCookieHeader } from "cookie";
+import type { Request } from "express";
+import { SignJWT, jwtVerify } from "jose";
+import type { User } from "../../drizzle/schema";
+import { getUserById } from "../db";
+import { getUserFromToken } from "../auth";
+import { ENV } from "./env";
+
+// Utility function
+const isNonEmptyString = (value: unknown): value is string =>
+  typeof value === "string" && value.length > 0;
+
+export type SessionPayload = {
+  userId: number;
+  email: string;
+  appId: string;
+  name: string;
+};
+
+class SDKServer {
+  private parseCookies(cookieHeader: string | undefined) {
+    if (!cookieHeader) {
+      return new Map<string, string>();
+    }
+
+    const parsed = parseCookieHeader(cookieHeader);
+    return new Map(Object.entries(parsed));
+  }
+
+  private getSessionSecret() {
+    const secret = ENV.cookieSecret;
+    return new TextEncoder().encode(secret);
+  }
+
+  /**
+   * Create a session token for a user
+   */
+  async createSessionToken(
+    userId: number,
+    email: string,
+    options: { expiresInMs?: number; name?: string } = {}
+  ): Promise<string> {
+    return this.signSession(
+      {
+        userId,
+        email,
+        appId: ENV.appId,
+        name: options.name || "",
+      },
+      options
+    );
+  }
+
+  async signSession(
+    payload: SessionPayload,
+    options: { expiresInMs?: number } = {}
+  ): Promise<string> {
+    const issuedAt = Date.now();
+    const expiresInMs = options.expiresInMs ?? ONE_YEAR_MS;
+    const expirationSeconds = Math.floor((issuedAt + expiresInMs) / 1000);
+    const secretKey = this.getSessionSecret();
+
+    return new SignJWT({
+      userId: payload.userId,
+      email: payload.email,
+      appId: payload.appId,
+      name: payload.name,
+    })
+      .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+      .setExpirationTime(expirationSeconds)
+      .sign(secretKey);
+  }
+
+  async verifySession(
+    cookieValue: string | undefined | null
+  ): Promise<{ userId: number; email: string; appId: string; name: string } | null> {
+    if (!cookieValue) {
+      console.warn("[Auth] Missing session cookie");
+      return null;
+    }
+
+    try {
+      const secretKey = this.getSessionSecret();
+      const { payload } = await jwtVerify(cookieValue, secretKey, {
+        algorithms: ["HS256"],
+      });
+      const { userId, email, appId, name } = payload as Record<string, unknown>;
+
+      if (
+        typeof userId !== 'number' ||
+        !isNonEmptyString(email) ||
+        !isNonEmptyString(appId)
+      ) {
+        console.warn("[Auth] Session payload missing required fields");
+        return null;
+      }
+
+      return {
+        userId,
+        email,
+        appId,
+        name: (name as string) || '',
+      };
+    } catch (error) {
+      console.warn("[Auth] Session verification failed", String(error));
+      return null;
+    }
+  }
+
+  async authenticateRequest(req: Request): Promise<User> {
+    // Check for Authorization header first (Bearer token)
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      const authUser = await getUserFromToken(token);
+      
+      if (authUser) {
+        const user = await getUserById(authUser.id);
+        if (user) {
+          return user;
+        }
+      }
+    }
+
+    // Fall back to cookie-based authentication
+    const cookies = this.parseCookies(req.headers.cookie);
+    const sessionCookie = cookies.get(COOKIE_NAME);
+    
+    // Try JWT token from cookie
+    if (sessionCookie) {
+      const authUser = await getUserFromToken(sessionCookie);
+      if (authUser) {
+        const user = await getUserById(authUser.id);
+        if (user) {
+          return user;
+        }
+      }
+    }
+
+    // Try session verification
+    const session = await this.verifySession(sessionCookie);
+    if (session) {
+      const user = await getUserById(session.userId);
+      if (user) {
+        return user;
+      }
+    }
+
+    throw ForbiddenError("Invalid session - please log in");
+  }
+}
+
+export const sdk = new SDKServer();

@@ -1,0 +1,567 @@
+{
+  "en": {
+    "language": "English",
+    "crisis": {
+      "title": "If You Are in Crisis",
+      "subtitle": "If you are experiencing a mental health emergency or having thoughts of suicide, please contact emergency services immediately:",
+      "hotline988": "988 - Suicide & Crisis Lifeline (24/7)",
+      "hotline911": "911 - Emergency Services",
+      "dvHotline": "1-800-799-7233 - National DV Hotline (24/7)",
+      "textLine": "Text HOME to 741741 - Crisis Text Line"
+    },
+    "grounding": {
+      "boxBreathing": {
+        "title": "Box Breathing",
+        "description": "A calming technique to regulate your nervous system",
+        "steps": [
+          "Breathe in slowly for 4 seconds",
+          "Hold your breath for 4 seconds",
+          "Breathe out slowly for 4 seconds",
+          "Hold empty for 4 seconds",
+          "Repeat 4 times"
+        ]
+      },
+      "fiveSenses": {
+        "title": "5-4-3-2-1 Grounding",
+        "description": "Use your senses to anchor yourself in the present moment",
+        "steps": [
+          "Name 5 things you can SEE",
+          "Name 4 things you can TOUCH",
+          "Name 3 things you can HEAR",
+          "Name 2 things you can SMELL",
+          "Name 1 thing you can TASTE"
+        ]
+      },
+      "coldWater": {
+        "title": "Cold Water Reset",
+        "description": "Activate your dive reflex to calm your nervous system",
+        "steps": [
+          "Get cold water (ice water if possible)",
+          "Splash cold water on your face",
+          "Or hold ice cubes in your hands",
+          "Focus on the cold sensation",
+          "Breathe slowly as your heart rate drops"
+        ]
+      },
+      "bodyRelaxation": {
+        "title": "Progressive Muscle Relaxation",
+        "description": "Release tension from your body systematically",
+        "steps": [
+          "Start with your feet - tense for 5 seconds, then release",
+          "Move to your calves - tense and release",
+          "Continue to thighs, stomach, chest",
+          "Then hands, arms, shoulders",
+          "Finally face and jaw - release all tension"
+        ]
+      },
+      "safePlace": {
+        "title": "Safe Place Visualization",
+        "description": "Create a mental sanctuary where you feel completely safe",
+        "steps": [
+          "Close your eyes and take a deep breath",
+          "Imagine a place where you feel completely safe",
+          "Notice the colors, sounds, and smells",
+          "Feel the temperature and textures around you",
+          "Stay here as long as you need"
+        ]
+      }
+    },
+    "safetyPlan": {
+      "title": "Safety Plan",
+      "encrypted": "Your plan is encrypted",
+      "progress": "Progress",
+      "complete": "complete",
+      "steps": {
+        "contacts": "Safe Contacts & Code Words",
+        "warnings": "Recognizing Warning Signs",
+        "places": "Safe Places to Go",
+        "bag": "Emergency Bag",
+        "documents": "Important Documents",
+        "financial": "Financial Safety",
+        "technology": "Technology Safety",
+        "children": "Children's Safety",
+        "pets": "Pet Safety",
+        "exit": "Your Exit Strategy"
+      }
+    },
+    "checkIn": {
+      "title": "Wellness Check-In",
+      "setupTitle": "Set Up Check-Ins",
+      "frequency": "Check-in Frequency",
+      "daily": "Daily",
+      "twiceDaily": "Twice Daily",
+      "weekly": "Weekly",
+      "custom": "Custom",
+      "emergencyContact": "Emergency Contact",
+      "alertMessage": "If I don't respond, send this message:",
+      "defaultAlert": "I haven't checked in with ReUnity. Please check on me.",
+      "confirmButton": "I'm OK",
+      "missedTitle": "Missed Check-In Alert",
+      "missedMessage": "You missed your scheduled check-in. Are you safe?"
+    },
+    "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "next": "Next",
+      "previous": "Previous",
+      "close": "Close",
+      "call": "Call",
+      "text": "Text",
+      "emergency": "Emergency",
+      "settings": "Settings",
+      "help": "Help"
+    }
+  },
+  "es": {
+    "language": "Español",
+    "crisis": {
+      "title": "Si Estás en Crisis",
+      "subtitle": "Si estás experimentando una emergencia de salud mental o tienes pensamientos suicidas, contacta los servicios de emergencia inmediatamente:",
+      "hotline988": "988 - Línea de Crisis y Suicidio (24/7)",
+      "hotline911": "911 - Servicios de Emergencia",
+      "dvHotline": "1-800-799-7233 - Línea Nacional de Violencia Doméstica (24/7)",
+      "textLine": "Envía HOLA al 741741 - Línea de Texto de Crisis"
+    },
+    "grounding": {
+      "boxBreathing": {
+        "title": "Respiración Cuadrada",
+        "description": "Una técnica calmante para regular tu sistema nervioso",
+        "steps": [
+          "Inhala lentamente durante 4 segundos",
+          "Mantén la respiración durante 4 segundos",
+          "Exhala lentamente durante 4 segundos",
+          "Mantén vacío durante 4 segundos",
+          "Repite 4 veces"
+        ]
+      },
+      "fiveSenses": {
+        "title": "Técnica 5-4-3-2-1",
+        "description": "Usa tus sentidos para anclarte en el momento presente",
+        "steps": [
+          "Nombra 5 cosas que puedes VER",
+          "Nombra 4 cosas que puedes TOCAR",
+          "Nombra 3 cosas que puedes OÍR",
+          "Nombra 2 cosas que puedes OLER",
+          "Nombra 1 cosa que puedes SABOREAR"
+        ]
+      },
+      "coldWater": {
+        "title": "Reinicio con Agua Fría",
+        "description": "Activa tu reflejo de inmersión para calmar tu sistema nervioso",
+        "steps": [
+          "Consigue agua fría (agua con hielo si es posible)",
+          "Salpica agua fría en tu cara",
+          "O sostén cubos de hielo en tus manos",
+          "Concéntrate en la sensación de frío",
+          "Respira lentamente mientras tu ritmo cardíaco baja"
+        ]
+      },
+      "bodyRelaxation": {
+        "title": "Relajación Muscular Progresiva",
+        "description": "Libera la tensión de tu cuerpo sistemáticamente",
+        "steps": [
+          "Comienza con tus pies - tensa por 5 segundos, luego suelta",
+          "Pasa a tus pantorrillas - tensa y suelta",
+          "Continúa con muslos, estómago, pecho",
+          "Luego manos, brazos, hombros",
+          "Finalmente cara y mandíbula - libera toda la tensión"
+        ]
+      },
+      "safePlace": {
+        "title": "Visualización del Lugar Seguro",
+        "description": "Crea un santuario mental donde te sientas completamente seguro/a",
+        "steps": [
+          "Cierra los ojos y respira profundamente",
+          "Imagina un lugar donde te sientas completamente seguro/a",
+          "Nota los colores, sonidos y olores",
+          "Siente la temperatura y texturas a tu alrededor",
+          "Quédate aquí el tiempo que necesites"
+        ]
+      }
+    },
+    "safetyPlan": {
+      "title": "Plan de Seguridad",
+      "encrypted": "Tu plan está encriptado",
+      "progress": "Progreso",
+      "complete": "completo",
+      "steps": {
+        "contacts": "Contactos Seguros y Palabras Clave",
+        "warnings": "Reconociendo Señales de Advertencia",
+        "places": "Lugares Seguros",
+        "bag": "Bolsa de Emergencia",
+        "documents": "Documentos Importantes",
+        "financial": "Seguridad Financiera",
+        "technology": "Seguridad Tecnológica",
+        "children": "Seguridad de los Niños",
+        "pets": "Seguridad de las Mascotas",
+        "exit": "Tu Estrategia de Salida"
+      }
+    },
+    "checkIn": {
+      "title": "Verificación de Bienestar",
+      "setupTitle": "Configurar Verificaciones",
+      "frequency": "Frecuencia de Verificación",
+      "daily": "Diario",
+      "twiceDaily": "Dos veces al día",
+      "weekly": "Semanal",
+      "custom": "Personalizado",
+      "emergencyContact": "Contacto de Emergencia",
+      "alertMessage": "Si no respondo, envía este mensaje:",
+      "defaultAlert": "No he hecho mi verificación con ReUnity. Por favor revísame.",
+      "confirmButton": "Estoy Bien",
+      "missedTitle": "Alerta de Verificación Perdida",
+      "missedMessage": "Perdiste tu verificación programada. ¿Estás a salvo?"
+    },
+    "common": {
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "close": "Cerrar",
+      "call": "Llamar",
+      "text": "Mensaje",
+      "emergency": "Emergencia",
+      "settings": "Configuración",
+      "help": "Ayuda"
+    }
+  },
+  "fr": {
+    "language": "Français",
+    "crisis": {
+      "title": "Si Vous Êtes en Crise",
+      "subtitle": "Si vous vivez une urgence de santé mentale ou avez des pensées suicidaires, contactez les services d'urgence immédiatement:",
+      "hotline988": "988 - Ligne de Crise et Suicide (24/7)",
+      "hotline911": "911 - Services d'Urgence",
+      "dvHotline": "1-800-799-7233 - Ligne Nationale Violence Domestique (24/7)",
+      "textLine": "Envoyez HELLO au 741741 - Ligne de Texte de Crise"
+    },
+    "grounding": {
+      "boxBreathing": {
+        "title": "Respiration Carrée",
+        "description": "Une technique apaisante pour réguler votre système nerveux",
+        "steps": [
+          "Inspirez lentement pendant 4 secondes",
+          "Retenez votre souffle pendant 4 secondes",
+          "Expirez lentement pendant 4 secondes",
+          "Gardez vide pendant 4 secondes",
+          "Répétez 4 fois"
+        ]
+      },
+      "fiveSenses": {
+        "title": "Technique 5-4-3-2-1",
+        "description": "Utilisez vos sens pour vous ancrer dans le moment présent",
+        "steps": [
+          "Nommez 5 choses que vous pouvez VOIR",
+          "Nommez 4 choses que vous pouvez TOUCHER",
+          "Nommez 3 choses que vous pouvez ENTENDRE",
+          "Nommez 2 choses que vous pouvez SENTIR",
+          "Nommez 1 chose que vous pouvez GOÛTER"
+        ]
+      },
+      "coldWater": {
+        "title": "Réinitialisation à l'Eau Froide",
+        "description": "Activez votre réflexe de plongée pour calmer votre système nerveux",
+        "steps": [
+          "Prenez de l'eau froide (eau glacée si possible)",
+          "Aspergez votre visage d'eau froide",
+          "Ou tenez des glaçons dans vos mains",
+          "Concentrez-vous sur la sensation de froid",
+          "Respirez lentement pendant que votre rythme cardiaque diminue"
+        ]
+      },
+      "bodyRelaxation": {
+        "title": "Relaxation Musculaire Progressive",
+        "description": "Libérez systématiquement la tension de votre corps",
+        "steps": [
+          "Commencez par vos pieds - tendez pendant 5 secondes, puis relâchez",
+          "Passez à vos mollets - tendez et relâchez",
+          "Continuez avec les cuisses, l'estomac, la poitrine",
+          "Puis les mains, les bras, les épaules",
+          "Enfin le visage et la mâchoire - libérez toute tension"
+        ]
+      },
+      "safePlace": {
+        "title": "Visualisation du Lieu Sûr",
+        "description": "Créez un sanctuaire mental où vous vous sentez complètement en sécurité",
+        "steps": [
+          "Fermez les yeux et respirez profondément",
+          "Imaginez un endroit où vous vous sentez complètement en sécurité",
+          "Remarquez les couleurs, les sons et les odeurs",
+          "Ressentez la température et les textures autour de vous",
+          "Restez ici aussi longtemps que nécessaire"
+        ]
+      }
+    },
+    "safetyPlan": {
+      "title": "Plan de Sécurité",
+      "encrypted": "Votre plan est crypté",
+      "progress": "Progrès",
+      "complete": "terminé",
+      "steps": {
+        "contacts": "Contacts Sûrs et Mots de Code",
+        "warnings": "Reconnaître les Signes d'Alerte",
+        "places": "Lieux Sûrs",
+        "bag": "Sac d'Urgence",
+        "documents": "Documents Importants",
+        "financial": "Sécurité Financière",
+        "technology": "Sécurité Technologique",
+        "children": "Sécurité des Enfants",
+        "pets": "Sécurité des Animaux",
+        "exit": "Votre Stratégie de Sortie"
+      }
+    },
+    "checkIn": {
+      "title": "Vérification de Bien-être",
+      "setupTitle": "Configurer les Vérifications",
+      "frequency": "Fréquence de Vérification",
+      "daily": "Quotidien",
+      "twiceDaily": "Deux fois par jour",
+      "weekly": "Hebdomadaire",
+      "custom": "Personnalisé",
+      "emergencyContact": "Contact d'Urgence",
+      "alertMessage": "Si je ne réponds pas, envoyez ce message:",
+      "defaultAlert": "Je n'ai pas fait ma vérification avec ReUnity. Veuillez vérifier si je vais bien.",
+      "confirmButton": "Je Vais Bien",
+      "missedTitle": "Alerte de Vérification Manquée",
+      "missedMessage": "Vous avez manqué votre vérification programmée. Êtes-vous en sécurité?"
+    },
+    "common": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "next": "Suivant",
+      "previous": "Précédent",
+      "close": "Fermer",
+      "call": "Appeler",
+      "text": "Message",
+      "emergency": "Urgence",
+      "settings": "Paramètres",
+      "help": "Aide"
+    }
+  },
+  "zh": {
+    "language": "中文",
+    "crisis": {
+      "title": "如果您处于危机中",
+      "subtitle": "如果您正在经历心理健康紧急情况或有自杀念头，请立即联系紧急服务：",
+      "hotline988": "988 - 自杀与危机生命线 (24/7)",
+      "hotline911": "911 - 紧急服务",
+      "dvHotline": "1-800-799-7233 - 全国家庭暴力热线 (24/7)",
+      "textLine": "发送 HOME 到 741741 - 危机短信热线"
+    },
+    "grounding": {
+      "boxBreathing": {
+        "title": "方块呼吸法",
+        "description": "一种调节神经系统的平静技巧",
+        "steps": [
+          "慢慢吸气4秒",
+          "屏住呼吸4秒",
+          "慢慢呼气4秒",
+          "保持空气4秒",
+          "重复4次"
+        ]
+      },
+      "fiveSenses": {
+        "title": "5-4-3-2-1 接地法",
+        "description": "使用你的感官将自己锚定在当下",
+        "steps": [
+          "说出5样你能看到的东西",
+          "说出4样你能触摸的东西",
+          "说出3样你能听到的东西",
+          "说出2样你能闻到的东西",
+          "说出1样你能尝到的东西"
+        ]
+      },
+      "coldWater": {
+        "title": "冷水重置",
+        "description": "激活你的潜水反射来平静神经系统",
+        "steps": [
+          "准备冷水（如果可能的话用冰水）",
+          "用冷水泼脸",
+          "或者手握冰块",
+          "专注于冰冷的感觉",
+          "当心率下降时慢慢呼吸"
+        ]
+      },
+      "bodyRelaxation": {
+        "title": "渐进式肌肉放松",
+        "description": "系统地释放身体的紧张",
+        "steps": [
+          "从脚开始 - 紧绷5秒，然后放松",
+          "移到小腿 - 紧绷然后放松",
+          "继续到大腿、腹部、胸部",
+          "然后是手、手臂、肩膀",
+          "最后是脸和下巴 - 释放所有紧张"
+        ]
+      },
+      "safePlace": {
+        "title": "安全地点想象",
+        "description": "创建一个让你感到完全安全的心理避难所",
+        "steps": [
+          "闭上眼睛，深呼吸",
+          "想象一个让你感到完全安全的地方",
+          "注意颜色、声音和气味",
+          "感受周围的温度和质地",
+          "在这里停留你需要的时间"
+        ]
+      }
+    },
+    "safetyPlan": {
+      "title": "安全计划",
+      "encrypted": "您的计划已加密",
+      "progress": "进度",
+      "complete": "完成",
+      "steps": {
+        "contacts": "安全联系人和暗号",
+        "warnings": "识别警告信号",
+        "places": "安全去处",
+        "bag": "应急包",
+        "documents": "重要文件",
+        "financial": "财务安全",
+        "technology": "技术安全",
+        "children": "儿童安全",
+        "pets": "宠物安全",
+        "exit": "您的退出策略"
+      }
+    },
+    "checkIn": {
+      "title": "健康检查",
+      "setupTitle": "设置检查",
+      "frequency": "检查频率",
+      "daily": "每天",
+      "twiceDaily": "每天两次",
+      "weekly": "每周",
+      "custom": "自定义",
+      "emergencyContact": "紧急联系人",
+      "alertMessage": "如果我没有回复，发送此消息：",
+      "defaultAlert": "我没有在ReUnity签到。请检查我的情况。",
+      "confirmButton": "我很好",
+      "missedTitle": "错过签到警报",
+      "missedMessage": "您错过了预定的签到。您安全吗？"
+    },
+    "common": {
+      "save": "保存",
+      "cancel": "取消",
+      "next": "下一步",
+      "previous": "上一步",
+      "close": "关闭",
+      "call": "呼叫",
+      "text": "短信",
+      "emergency": "紧急",
+      "settings": "设置",
+      "help": "帮助"
+    }
+  },
+  "vi": {
+    "language": "Tiếng Việt",
+    "crisis": {
+      "title": "Nếu Bạn Đang Trong Khủng Hoảng",
+      "subtitle": "Nếu bạn đang trải qua tình trạng khẩn cấp về sức khỏe tâm thần hoặc có ý định tự tử, vui lòng liên hệ dịch vụ cấp cứu ngay:",
+      "hotline988": "988 - Đường Dây Khủng Hoảng & Tự Tử (24/7)",
+      "hotline911": "911 - Dịch Vụ Cấp Cứu",
+      "dvHotline": "1-800-799-7233 - Đường Dây Bạo Lực Gia Đình Quốc Gia (24/7)",
+      "textLine": "Nhắn HOME đến 741741 - Đường Dây Tin Nhắn Khủng Hoảng"
+    },
+    "grounding": {
+      "boxBreathing": {
+        "title": "Thở Hộp",
+        "description": "Kỹ thuật làm dịu để điều hòa hệ thần kinh",
+        "steps": [
+          "Hít vào chậm trong 4 giây",
+          "Giữ hơi thở trong 4 giây",
+          "Thở ra chậm trong 4 giây",
+          "Giữ trống trong 4 giây",
+          "Lặp lại 4 lần"
+        ]
+      },
+      "fiveSenses": {
+        "title": "Kỹ Thuật 5-4-3-2-1",
+        "description": "Sử dụng các giác quan để neo mình vào hiện tại",
+        "steps": [
+          "Kể tên 5 thứ bạn có thể NHÌN THẤY",
+          "Kể tên 4 thứ bạn có thể CHẠM VÀO",
+          "Kể tên 3 thứ bạn có thể NGHE",
+          "Kể tên 2 thứ bạn có thể NGỬI",
+          "Kể tên 1 thứ bạn có thể NẾM"
+        ]
+      },
+      "coldWater": {
+        "title": "Đặt Lại Bằng Nước Lạnh",
+        "description": "Kích hoạt phản xạ lặn để làm dịu hệ thần kinh",
+        "steps": [
+          "Lấy nước lạnh (nước đá nếu có thể)",
+          "Vỗ nước lạnh lên mặt",
+          "Hoặc cầm đá trong tay",
+          "Tập trung vào cảm giác lạnh",
+          "Thở chậm khi nhịp tim giảm"
+        ]
+      },
+      "bodyRelaxation": {
+        "title": "Thư Giãn Cơ Tiến Triển",
+        "description": "Giải phóng căng thẳng từ cơ thể một cách có hệ thống",
+        "steps": [
+          "Bắt đầu từ chân - căng trong 5 giây, rồi thả",
+          "Chuyển đến bắp chân - căng và thả",
+          "Tiếp tục đến đùi, bụng, ngực",
+          "Rồi tay, cánh tay, vai",
+          "Cuối cùng mặt và hàm - thả hết căng thẳng"
+        ]
+      },
+      "safePlace": {
+        "title": "Hình Dung Nơi An Toàn",
+        "description": "Tạo một nơi trú ẩn tinh thần nơi bạn cảm thấy hoàn toàn an toàn",
+        "steps": [
+          "Nhắm mắt và hít thở sâu",
+          "Tưởng tượng một nơi bạn cảm thấy hoàn toàn an toàn",
+          "Chú ý màu sắc, âm thanh và mùi hương",
+          "Cảm nhận nhiệt độ và kết cấu xung quanh",
+          "Ở đây bao lâu bạn cần"
+        ]
+      }
+    },
+    "safetyPlan": {
+      "title": "Kế Hoạch An Toàn",
+      "encrypted": "Kế hoạch của bạn được mã hóa",
+      "progress": "Tiến độ",
+      "complete": "hoàn thành",
+      "steps": {
+        "contacts": "Liên Hệ An Toàn & Mật Khẩu",
+        "warnings": "Nhận Biết Dấu Hiệu Cảnh Báo",
+        "places": "Nơi An Toàn",
+        "bag": "Túi Khẩn Cấp",
+        "documents": "Tài Liệu Quan Trọng",
+        "financial": "An Toàn Tài Chính",
+        "technology": "An Toàn Công Nghệ",
+        "children": "An Toàn Trẻ Em",
+        "pets": "An Toàn Thú Cưng",
+        "exit": "Chiến Lược Thoát Hiểm"
+      }
+    },
+    "checkIn": {
+      "title": "Kiểm Tra Sức Khỏe",
+      "setupTitle": "Thiết Lập Kiểm Tra",
+      "frequency": "Tần Suất Kiểm Tra",
+      "daily": "Hàng ngày",
+      "twiceDaily": "Hai lần mỗi ngày",
+      "weekly": "Hàng tuần",
+      "custom": "Tùy chỉnh",
+      "emergencyContact": "Liên Hệ Khẩn Cấp",
+      "alertMessage": "Nếu tôi không phản hồi, gửi tin nhắn này:",
+      "defaultAlert": "Tôi chưa check-in với ReUnity. Xin hãy kiểm tra tôi.",
+      "confirmButton": "Tôi Ổn",
+      "missedTitle": "Cảnh Báo Bỏ Lỡ Check-in",
+      "missedMessage": "Bạn đã bỏ lỡ check-in theo lịch. Bạn có an toàn không?"
+    },
+    "common": {
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "next": "Tiếp",
+      "previous": "Trước",
+      "close": "Đóng",
+      "call": "Gọi",
+      "text": "Nhắn tin",
+      "emergency": "Khẩn cấp",
+      "settings": "Cài đặt",
+      "help": "Trợ giúp"
+    }
+  }
+}

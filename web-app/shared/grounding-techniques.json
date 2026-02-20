@@ -1,0 +1,509 @@
+{
+  "techniques": {
+    "sensory": [
+      {
+        "id": "cold_water_reset",
+        "name": "Cold Water Reset",
+        "category": "sensory",
+        "intensity": "high",
+        "duration": "1-2 min",
+        "forStates": ["dissociation", "panic", "flashback", "derealization"],
+        "contraindications": ["heart_conditions", "raynauds"],
+        "instructions": "Run cold water over your wrists and the back of your neck. Feel the temperature change. If safe, splash cold water on your face or hold ice cubes. The cold activates your dive reflex and resets your nervous system.",
+        "scienceBasis": "Activates the mammalian dive reflex, triggering parasympathetic response and reducing heart rate"
+      },
+      {
+        "id": "texture_anchoring",
+        "name": "Texture Anchoring",
+        "category": "sensory",
+        "intensity": "low",
+        "duration": "2-5 min",
+        "forStates": ["anxiety", "dissociation", "depersonalization"],
+        "contraindications": [],
+        "instructions": "Find three different textures around you. Touch each one slowly. Describe the texture to yourself: Is it rough? Smooth? Cold? Warm? Soft? Hard? Let your fingertips map every detail.",
+        "scienceBasis": "Engages somatosensory cortex, redirecting neural activity from limbic system"
+      },
+      {
+        "id": "temperature_contrast",
+        "name": "Temperature Contrast",
+        "category": "sensory",
+        "intensity": "medium",
+        "duration": "3-5 min",
+        "forStates": ["numbness", "dissociation", "emotional_flatness"],
+        "contraindications": ["nerve_damage", "diabetes"],
+        "instructions": "Alternate between something warm and something cold. Hold a warm mug, then touch something cool. Notice the contrast. Your body is real. These sensations are real.",
+        "scienceBasis": "Thermoreceptor activation increases interoceptive awareness"
+      },
+      {
+        "id": "scent_grounding",
+        "name": "Scent Anchoring",
+        "category": "sensory",
+        "intensity": "low",
+        "duration": "1-3 min",
+        "forStates": ["flashback", "intrusive_memories", "anxiety"],
+        "contraindications": ["migraine", "scent_sensitivity"],
+        "instructions": "Find a strong, pleasant scent - coffee, citrus, peppermint, lavender. Breathe it in deeply. Scent bypasses the thinking brain and goes straight to memory. Use a scent that means 'now' to you, not the past.",
+        "scienceBasis": "Olfactory bulb directly connects to hippocampus and amygdala, can override traumatic memory activation"
+      },
+      {
+        "id": "pressure_grounding",
+        "name": "Deep Pressure Grounding",
+        "category": "sensory",
+        "intensity": "medium",
+        "duration": "5-10 min",
+        "forStates": ["anxiety", "overstimulation", "sensory_overwhelm", "autism_meltdown"],
+        "contraindications": ["claustrophobia"],
+        "instructions": "Apply firm pressure to your body. Wrap yourself tightly in a blanket. Press your back against a wall. Squeeze your arms around yourself. The pressure tells your nervous system you are contained and safe.",
+        "scienceBasis": "Proprioceptive input activates parasympathetic nervous system, similar to weighted blanket effect"
+      },
+      {
+        "id": "sound_anchoring",
+        "name": "Sound Anchoring",
+        "category": "sensory",
+        "intensity": "low",
+        "duration": "2-5 min",
+        "forStates": ["dissociation", "derealization", "intrusive_thoughts"],
+        "contraindications": ["hyperacusis"],
+        "instructions": "Listen for the most distant sound you can hear. Then the closest. Then a sound in between. Name each one. You are here, in this moment, where these sounds exist.",
+        "scienceBasis": "Auditory processing requires present-moment attention, interrupting rumination circuits"
+      }
+    ],
+    "somatic": [
+      {
+        "id": "bilateral_tapping",
+        "name": "Bilateral Tapping",
+        "category": "somatic",
+        "intensity": "low",
+        "duration": "2-5 min",
+        "forStates": ["anxiety", "trauma_activation", "emotional_overwhelm"],
+        "contraindications": [],
+        "instructions": "Tap alternately on your knees, shoulders, or cross your arms and tap your upper arms. Left, right, left, right. Keep a steady rhythm. This bilateral stimulation helps process difficult emotions.",
+        "scienceBasis": "Bilateral stimulation facilitates interhemispheric communication, similar to EMDR mechanism"
+      },
+      {
+        "id": "butterfly_hug",
+        "name": "Butterfly Hug",
+        "category": "somatic",
+        "intensity": "low",
+        "duration": "2-5 min",
+        "forStates": ["anxiety", "grief", "loneliness", "self_soothing"],
+        "contraindications": [],
+        "instructions": "Cross your arms over your chest, hands resting on your shoulders. Tap alternately, like butterfly wings. Breathe slowly. You are holding yourself. You are safe.",
+        "scienceBasis": "Combines bilateral stimulation with self-touch, activating oxytocin release"
+      },
+      {
+        "id": "vagal_toning",
+        "name": "Vagal Toning",
+        "category": "somatic",
+        "intensity": "medium",
+        "duration": "3-5 min",
+        "forStates": ["panic", "hyperarousal", "fight_flight"],
+        "contraindications": [],
+        "instructions": "Hum deeply, letting your chest vibrate. Or make a long 'voo' sound. The vibration stimulates your vagus nerve, telling your body the danger has passed.",
+        "scienceBasis": "Vagus nerve stimulation activates parasympathetic response, reducing cortisol and adrenaline"
+      },
+      {
+        "id": "progressive_muscle",
+        "name": "Progressive Muscle Release",
+        "category": "somatic",
+        "intensity": "medium",
+        "duration": "10-15 min",
+        "forStates": ["tension", "anxiety", "insomnia", "hypervigilance"],
+        "contraindications": ["muscle_injury"],
+        "instructions": "Starting with your feet, tense each muscle group for 5 seconds, then release. Move up through your legs, stomach, chest, arms, shoulders, face. Notice the difference between tension and release.",
+        "scienceBasis": "Jacobson's technique reduces muscle tension and associated anxiety through contrast awareness"
+      },
+      {
+        "id": "shaking_release",
+        "name": "Trauma Shaking",
+        "category": "somatic",
+        "intensity": "high",
+        "duration": "5-10 min",
+        "forStates": ["trauma_activation", "freeze_response", "stored_tension"],
+        "contraindications": ["injury", "vertigo"],
+        "instructions": "Stand with soft knees and let your body shake. Start with your hands, let it spread to your arms, shoulders, whole body. Animals shake after danger passes. Your body knows how to release.",
+        "scienceBasis": "TRE (Trauma Release Exercises) - neurogenic tremoring discharges stored survival energy"
+      },
+      {
+        "id": "orienting_response",
+        "name": "Orienting Response",
+        "category": "somatic",
+        "intensity": "low",
+        "duration": "2-3 min",
+        "forStates": ["hypervigilance", "anxiety", "flashback"],
+        "contraindications": [],
+        "instructions": "Slowly turn your head and look around the room. Let your eyes land on things naturally. Notice colors, shapes, objects. Your nervous system is checking: Am I safe here? Let it complete the check.",
+        "scienceBasis": "Completes the orienting reflex that gets interrupted during trauma, signaling safety to amygdala"
+      },
+      {
+        "id": "feet_grounding",
+        "name": "Feet to Earth",
+        "category": "somatic",
+        "intensity": "low",
+        "duration": "2-5 min",
+        "forStates": ["dissociation", "derealization", "floating_feeling"],
+        "contraindications": [],
+        "instructions": "Press your feet firmly into the floor. If possible, remove your shoes. Feel the ground beneath you. Push down. The earth is holding you. You are connected to something solid.",
+        "scienceBasis": "Proprioceptive grounding through plantar pressure receptors"
+      }
+    ],
+    "cognitive": [
+      {
+        "id": "five_four_three_two_one",
+        "name": "5-4-3-2-1 Senses",
+        "category": "cognitive",
+        "intensity": "low",
+        "duration": "3-5 min",
+        "forStates": ["anxiety", "panic", "dissociation", "general"],
+        "contraindications": [],
+        "instructions": "Name 5 things you can see. 4 things you can touch. 3 things you can hear. 2 things you can smell. 1 thing you can taste. You are here, in this moment.",
+        "scienceBasis": "Engages prefrontal cortex through naming, reducing amygdala activation"
+      },
+      {
+        "id": "alphabet_game",
+        "name": "Alphabet Categories",
+        "category": "cognitive",
+        "intensity": "low",
+        "duration": "3-5 min",
+        "forStates": ["intrusive_thoughts", "rumination", "anxiety"],
+        "contraindications": [],
+        "instructions": "Pick a category (animals, cities, foods). Go through the alphabet naming one for each letter. A-Antelope, B-Bear, C-Cat... This occupies your thinking brain.",
+        "scienceBasis": "Working memory task interrupts default mode network rumination"
+      },
+      {
+        "id": "math_grounding",
+        "name": "Math Grounding",
+        "category": "cognitive",
+        "intensity": "medium",
+        "duration": "2-5 min",
+        "forStates": ["panic", "emotional_flooding", "dissociation"],
+        "contraindications": ["math_anxiety"],
+        "instructions": "Count backward from 100 by 7s. Or multiply numbers. The effort required to do math pulls your brain out of the emotional spiral and into the logical present.",
+        "scienceBasis": "Activates dorsolateral prefrontal cortex, inhibiting limbic system"
+      },
+      {
+        "id": "reality_testing",
+        "name": "Reality Anchoring",
+        "category": "cognitive",
+        "intensity": "low",
+        "duration": "2-3 min",
+        "forStates": ["derealization", "depersonalization", "psychosis_early"],
+        "contraindications": [],
+        "instructions": "State facts about right now: My name is ___. Today is ___. I am in ___. The year is ___. I am ___ years old. These facts are anchors to the real.",
+        "scienceBasis": "Semantic memory activation grounds identity and temporal orientation"
+      },
+      {
+        "id": "container_visualization",
+        "name": "Container Technique",
+        "category": "cognitive",
+        "intensity": "medium",
+        "duration": "5-10 min",
+        "forStates": ["overwhelm", "intrusive_memories", "emotional_flooding"],
+        "contraindications": [],
+        "instructions": "Imagine a strong container - a safe, a vault, a chest. Visualize putting the overwhelming feelings or memories inside it. Lock it. You can come back to it when you're ready, with support. For now, it's contained.",
+        "scienceBasis": "Symbolic containment reduces perceived threat and provides sense of control"
+      },
+      {
+        "id": "parts_dialogue",
+        "name": "Parts Acknowledgment",
+        "category": "cognitive",
+        "intensity": "medium",
+        "duration": "5-15 min",
+        "forStates": ["internal_conflict", "dissociation", "identity_confusion", "did_osdd"],
+        "contraindications": [],
+        "instructions": "Notice if there's a part of you that feels different from other parts right now. Without judgment, acknowledge it: 'I notice a part of me feels ___.' You don't have to fix it. Just notice. All parts are welcome here.",
+        "scienceBasis": "IFS-informed approach reduces internal conflict through acceptance"
+      }
+    ],
+    "breathwork": [
+      {
+        "id": "box_breathing",
+        "name": "Box Breathing",
+        "category": "breathwork",
+        "intensity": "low",
+        "duration": "3-5 min",
+        "forStates": ["anxiety", "panic", "stress"],
+        "contraindications": ["respiratory_conditions"],
+        "instructions": "Breathe in for 4 counts. Hold for 4 counts. Breathe out for 4 counts. Hold for 4 counts. Repeat. The box has four equal sides. You are drawing calm with your breath.",
+        "scienceBasis": "Controlled breathing activates parasympathetic nervous system"
+      },
+      {
+        "id": "extended_exhale",
+        "name": "Extended Exhale",
+        "category": "breathwork",
+        "intensity": "low",
+        "duration": "3-5 min",
+        "forStates": ["panic", "hyperventilation", "anxiety"],
+        "contraindications": [],
+        "instructions": "Breathe in for 4 counts. Breathe out for 8 counts. The long exhale activates your body's calm-down system. You are safe enough to breathe slowly.",
+        "scienceBasis": "Extended exhalation increases vagal tone and parasympathetic activation"
+      },
+      {
+        "id": "physiological_sigh",
+        "name": "Physiological Sigh",
+        "category": "breathwork",
+        "intensity": "low",
+        "duration": "1-2 min",
+        "forStates": ["acute_stress", "panic", "anxiety"],
+        "contraindications": [],
+        "instructions": "Take a deep breath in. At the top, take a second small sip of air. Then let it all out slowly. This is the fastest way to calm your nervous system. Repeat 2-3 times.",
+        "scienceBasis": "Reinflates collapsed alveoli, maximizes CO2 offload, rapidly reduces stress"
+      },
+      {
+        "id": "belly_breathing",
+        "name": "Diaphragmatic Breathing",
+        "category": "breathwork",
+        "intensity": "low",
+        "duration": "5-10 min",
+        "forStates": ["anxiety", "tension", "shallow_breathing"],
+        "contraindications": [],
+        "instructions": "Place one hand on your chest, one on your belly. Breathe so only your belly hand moves. Your chest stays still. Breathe into your belly like filling a balloon. This is how you were born breathing.",
+        "scienceBasis": "Diaphragmatic breathing maximizes oxygen exchange and vagal stimulation"
+      },
+      {
+        "id": "coherent_breathing",
+        "name": "Coherent Breathing",
+        "category": "breathwork",
+        "intensity": "low",
+        "duration": "5-10 min",
+        "forStates": ["anxiety", "depression", "emotional_dysregulation"],
+        "contraindications": [],
+        "instructions": "Breathe in for 5 counts. Breathe out for 5 counts. No pause. Continuous, like waves. This rhythm synchronizes your heart and brain.",
+        "scienceBasis": "5-second rhythm optimizes heart rate variability and autonomic balance"
+      }
+    ],
+    "movement": [
+      {
+        "id": "wall_push",
+        "name": "Wall Push",
+        "category": "movement",
+        "intensity": "medium",
+        "duration": "1-3 min",
+        "forStates": ["anger", "frustration", "trapped_feeling", "fight_response"],
+        "contraindications": ["arm_injury"],
+        "instructions": "Stand facing a wall. Push against it with all your strength. Feel your muscles engage. Push the anger, the frustration, the trapped feeling into the wall. The wall can take it.",
+        "scienceBasis": "Isometric exercise discharges fight response energy safely"
+      },
+      {
+        "id": "power_pose",
+        "name": "Power Posture",
+        "category": "movement",
+        "intensity": "low",
+        "duration": "2 min",
+        "forStates": ["powerlessness", "shame", "low_confidence"],
+        "contraindications": [],
+        "instructions": "Stand tall. Feet apart. Hands on hips or arms raised in a V. Take up space. Hold for 2 minutes. Your body can teach your brain that you are powerful.",
+        "scienceBasis": "Expansive postures associated with increased testosterone and decreased cortisol"
+      },
+      {
+        "id": "walking_grounding",
+        "name": "Mindful Walking",
+        "category": "movement",
+        "intensity": "low",
+        "duration": "5-15 min",
+        "forStates": ["restlessness", "anxiety", "rumination"],
+        "contraindications": ["mobility_issues"],
+        "instructions": "Walk slowly. Feel each part of your foot as it touches the ground. Heel, ball, toes. Left, right. You are moving through space. You are here.",
+        "scienceBasis": "Combines bilateral movement with interoceptive attention"
+      },
+      {
+        "id": "dance_shake",
+        "name": "Shake It Out",
+        "category": "movement",
+        "intensity": "high",
+        "duration": "3-5 min",
+        "forStates": ["stuck_energy", "depression", "emotional_numbness"],
+        "contraindications": ["injury", "vertigo"],
+        "instructions": "Put on music or not. Shake your body. Let it move however it wants. Weird is good. Ugly is fine. Your body knows what it needs to release.",
+        "scienceBasis": "Spontaneous movement releases stored tension and increases endorphins"
+      }
+    ],
+    "relational": [
+      {
+        "id": "safe_person_visualization",
+        "name": "Safe Person Visualization",
+        "category": "relational",
+        "intensity": "low",
+        "duration": "5-10 min",
+        "forStates": ["loneliness", "abandonment", "attachment_pain"],
+        "contraindications": ["no_safe_people_history"],
+        "instructions": "Think of someone who has ever made you feel safe. Real or fictional. Imagine them here with you. What would they say? How would they look at you? Let yourself feel their presence.",
+        "scienceBasis": "Activates attachment system and oxytocin release through visualization"
+      },
+      {
+        "id": "self_compassion_touch",
+        "name": "Self-Compassion Touch",
+        "category": "relational",
+        "intensity": "low",
+        "duration": "2-5 min",
+        "forStates": ["self_hatred", "shame", "self_criticism"],
+        "contraindications": [],
+        "instructions": "Place your hand over your heart. Feel its warmth. Speak to yourself as you would to someone you love who is suffering. 'This is hard. You're doing your best. I'm here with you.'",
+        "scienceBasis": "Self-touch activates caregiving system and reduces cortisol"
+      },
+      {
+        "id": "pet_connection",
+        "name": "Animal Connection",
+        "category": "relational",
+        "intensity": "low",
+        "duration": "5-15 min",
+        "forStates": ["loneliness", "disconnection", "depression"],
+        "contraindications": ["animal_phobia"],
+        "instructions": "If you have a pet, spend time with them. Feel their fur, their warmth. Watch them breathe. Animals don't judge. They just are. Let yourself be with them.",
+        "scienceBasis": "Human-animal interaction increases oxytocin and decreases cortisol"
+      }
+    ],
+    "entropy_regulation": [
+      {
+        "id": "chaos_to_order",
+        "name": "Chaos to Order",
+        "category": "entropy_regulation",
+        "intensity": "medium",
+        "duration": "10-30 min",
+        "forStates": ["overwhelm", "chaos_feeling", "loss_of_control"],
+        "contraindications": [],
+        "instructions": "Find one small area of your environment and organize it. A drawer. A corner. Your bag. Creating external order helps your internal system find order. You are not powerless.",
+        "scienceBasis": "Environmental control restores sense of agency and reduces perceived chaos"
+      },
+      {
+        "id": "pattern_recognition",
+        "name": "Pattern Finding",
+        "category": "entropy_regulation",
+        "intensity": "low",
+        "duration": "3-5 min",
+        "forStates": ["chaos_feeling", "confusion", "fragmentation"],
+        "contraindications": [],
+        "instructions": "Look around and find patterns. Repeating shapes. Colors that match. Textures that echo each other. Your brain is designed to find order. Let it work.",
+        "scienceBasis": "Pattern recognition activates prefrontal cortex and reduces entropy perception"
+      },
+      {
+        "id": "routine_anchoring",
+        "name": "Routine Anchoring",
+        "category": "entropy_regulation",
+        "intensity": "low",
+        "duration": "varies",
+        "forStates": ["instability", "chaos", "identity_confusion"],
+        "contraindications": [],
+        "instructions": "Do one thing from your normal routine. Make tea the way you always do. Brush your teeth. Check your phone in your usual order. Routines are anchors in chaos.",
+        "scienceBasis": "Habitual behaviors require less cognitive load and provide predictability"
+      },
+      {
+        "id": "narrative_coherence",
+        "name": "Story Threading",
+        "category": "entropy_regulation",
+        "intensity": "medium",
+        "duration": "10-20 min",
+        "forStates": ["fragmentation", "identity_confusion", "memory_gaps"],
+        "contraindications": ["acute_trauma"],
+        "instructions": "Write or speak a simple timeline of your day. Or your week. Just facts. 'I woke up. I ate. I went here.' You are creating a thread through time. You exist continuously.",
+        "scienceBasis": "Narrative construction integrates hippocampal memory with prefrontal organization"
+      },
+      {
+        "id": "boundary_setting",
+        "name": "Boundary Visualization",
+        "category": "entropy_regulation",
+        "intensity": "medium",
+        "duration": "5-10 min",
+        "forStates": ["enmeshment", "boundary_violations", "overwhelm"],
+        "contraindications": [],
+        "instructions": "Imagine a boundary around yourself. A bubble, a wall, a force field. You decide what comes in and what stays out. Practice saying 'no' in your mind. Your edges are real.",
+        "scienceBasis": "Mental rehearsal of boundaries strengthens self-other differentiation"
+      }
+    ],
+    "fragmentation_restoration": [
+      {
+        "id": "timeline_grounding",
+        "name": "Timeline Grounding",
+        "category": "fragmentation_restoration",
+        "intensity": "medium",
+        "duration": "5-10 min",
+        "forStates": ["time_confusion", "flashback", "age_regression"],
+        "contraindications": [],
+        "instructions": "State your current age. The current year. Where you are right now. 'I am ___ years old. It is ___. I am in ___. The past is over. I survived.' Repeat until you feel it.",
+        "scienceBasis": "Temporal orientation activates hippocampal time-stamping of memories"
+      },
+      {
+        "id": "mirror_work",
+        "name": "Mirror Connection",
+        "category": "fragmentation_restoration",
+        "intensity": "medium",
+        "duration": "3-5 min",
+        "forStates": ["depersonalization", "identity_confusion", "dissociation"],
+        "contraindications": ["severe_body_dysmorphia"],
+        "instructions": "Look at yourself in a mirror. Make eye contact with yourself. Say your name. 'I am ___. This is my face. This is my body. I am here.' You are real.",
+        "scienceBasis": "Self-recognition activates medial prefrontal cortex and strengthens self-concept"
+      },
+      {
+        "id": "parts_mapping",
+        "name": "Parts Mapping",
+        "category": "fragmentation_restoration",
+        "intensity": "high",
+        "duration": "15-30 min",
+        "forStates": ["did_osdd", "internal_conflict", "identity_fragmentation"],
+        "contraindications": ["no_therapist_support"],
+        "instructions": "Draw or write about the different parts of yourself you notice. Give them names if they have them. Ages if they have them. What does each part need? All parts are welcome. All parts have a purpose.",
+        "scienceBasis": "Externalization and mapping reduces internal chaos and increases system awareness"
+      },
+      {
+        "id": "body_reclamation",
+        "name": "Body Reclamation",
+        "category": "fragmentation_restoration",
+        "intensity": "medium",
+        "duration": "5-10 min",
+        "forStates": ["depersonalization", "body_disconnection", "trauma"],
+        "contraindications": ["acute_body_trauma"],
+        "instructions": "Touch different parts of your body and name them. 'This is my hand. This is my arm. This is my shoulder.' Your body belongs to you. You are reclaiming it.",
+        "scienceBasis": "Interoceptive awareness combined with naming integrates body schema"
+      },
+      {
+        "id": "continuity_anchoring",
+        "name": "Continuity Anchoring",
+        "category": "fragmentation_restoration",
+        "intensity": "low",
+        "duration": "5-10 min",
+        "forStates": ["memory_gaps", "identity_confusion", "dissociative_amnesia"],
+        "contraindications": [],
+        "instructions": "Find something that has been with you for a long time. A photo, an object, a scar. Touch it. This thing has witnessed your continuity. You have been here all along.",
+        "scienceBasis": "Object permanence and autobiographical memory integration"
+      },
+      {
+        "id": "integration_breathing",
+        "name": "Integration Breathing",
+        "category": "fragmentation_restoration",
+        "intensity": "medium",
+        "duration": "5-10 min",
+        "forStates": ["fragmentation", "dissociation", "internal_conflict"],
+        "contraindications": [],
+        "instructions": "As you breathe in, imagine gathering all the scattered pieces of yourself. As you breathe out, imagine them settling into place. You don't have to force them. Just invite them home.",
+        "scienceBasis": "Visualization combined with breathwork promotes neural integration"
+      }
+    ]
+  },
+  "stateToTechniqueMapping": {
+    "dissociation": ["cold_water_reset", "texture_anchoring", "feet_grounding", "timeline_grounding", "mirror_work"],
+    "panic": ["physiological_sigh", "extended_exhale", "cold_water_reset", "vagal_toning"],
+    "flashback": ["timeline_grounding", "scent_grounding", "orienting_response", "cold_water_reset"],
+    "anxiety": ["box_breathing", "bilateral_tapping", "five_four_three_two_one", "coherent_breathing"],
+    "depression": ["dance_shake", "walking_grounding", "pet_connection", "power_pose"],
+    "anger": ["wall_push", "shaking_release", "extended_exhale"],
+    "shame": ["self_compassion_touch", "butterfly_hug", "safe_person_visualization"],
+    "trauma_activation": ["bilateral_tapping", "orienting_response", "shaking_release", "container_visualization"],
+    "identity_confusion": ["mirror_work", "parts_mapping", "timeline_grounding", "continuity_anchoring"],
+    "emotional_numbness": ["temperature_contrast", "dance_shake", "scent_grounding"],
+    "overwhelm": ["container_visualization", "chaos_to_order", "boundary_visualization", "physiological_sigh"],
+    "loneliness": ["safe_person_visualization", "pet_connection", "self_compassion_touch"],
+    "hypervigilance": ["orienting_response", "progressive_muscle", "coherent_breathing"],
+    "derealization": ["reality_testing", "texture_anchoring", "feet_grounding", "mirror_work"],
+    "depersonalization": ["body_reclamation", "mirror_work", "texture_anchoring", "temperature_contrast"],
+    "suicidal_ideation": ["cold_water_reset", "physiological_sigh", "safe_person_visualization", "timeline_grounding"],
+    "self_harm_urge": ["cold_water_reset", "texture_anchoring", "bilateral_tapping", "self_compassion_touch"],
+    "did_osdd": ["parts_dialogue", "parts_mapping", "integration_breathing", "continuity_anchoring"],
+    "bpd_crisis": ["cold_water_reset", "bilateral_tapping", "boundary_visualization", "self_compassion_touch"],
+    "ptsd_activation": ["orienting_response", "timeline_grounding", "bilateral_tapping", "container_visualization"]
+  },
+  "intensityProgression": {
+    "low": ["five_four_three_two_one", "box_breathing", "texture_anchoring", "reality_testing"],
+    "medium": ["bilateral_tapping", "vagal_toning", "container_visualization", "parts_dialogue"],
+    "high": ["cold_water_reset", "shaking_release", "parts_mapping"]
+  }
+}

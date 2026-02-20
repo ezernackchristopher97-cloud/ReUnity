@@ -1,0 +1,230 @@
+{
+  "conditions": {
+    "ptsd": {
+      "name": "Post-Traumatic Stress Disorder",
+      "coreExperiences": ["flashbacks", "hypervigilance", "avoidance", "nightmares", "emotional_numbing", "startle_response"],
+      "validationStatements": [
+        "Your nervous system learned to protect you. These responses kept you alive.",
+        "Flashbacks are memories that haven't been processed yet. They're not happening now.",
+        "Hypervigilance made sense when you weren't safe. Your body is still checking.",
+        "Avoidance is your mind trying to protect you from pain. It's not weakness."
+      ],
+      "interventionPriority": ["orienting_response", "timeline_grounding", "bilateral_tapping", "container_visualization", "shaking_release"],
+      "contraindicated": ["forced_exposure", "minimizing"],
+      "keyPhrases": ["trauma", "flashback", "triggered", "nightmare", "hypervigilant", "can't relax", "always on edge", "ptsd"]
+    },
+    "cptsd": {
+      "name": "Complex PTSD",
+      "coreExperiences": ["emotional_dysregulation", "negative_self_concept", "relationship_difficulties", "dissociation", "shame", "trust_issues"],
+      "validationStatements": [
+        "Complex trauma changes how we see ourselves and the world. That's not your fault.",
+        "When the people who should have protected you hurt you, it makes sense that trust is hard.",
+        "The shame you carry belongs to those who harmed you, not to you.",
+        "Your difficulty with emotions makes sense - you never had someone to help you learn to regulate."
+      ],
+      "interventionPriority": ["self_compassion_touch", "parts_dialogue", "boundary_visualization", "safe_person_visualization", "integration_breathing"],
+      "contraindicated": ["blame", "rushing_trust"],
+      "keyPhrases": ["childhood trauma", "abuse", "neglect", "never felt safe", "can't trust anyone", "always my fault", "toxic family", "emotional abuse"]
+    },
+    "did_osdd": {
+      "name": "Dissociative Identity Disorder / OSDD",
+      "coreExperiences": ["identity_alteration", "amnesia", "parts", "switching", "internal_conflict", "time_loss"],
+      "validationStatements": [
+        "Your mind created parts to survive what no child should have to survive. That's not disorder - that's adaptation.",
+        "All parts are welcome here. All parts have a purpose.",
+        "Losing time is disorienting. You're not crazy. Your system is doing its best.",
+        "Internal conflict between parts makes sense. You're learning to work together."
+      ],
+      "interventionPriority": ["parts_dialogue", "parts_mapping", "integration_breathing", "continuity_anchoring", "timeline_grounding"],
+      "contraindicated": ["forced_integration", "part_shaming", "disbelief"],
+      "keyPhrases": ["parts", "alters", "system", "switching", "lost time", "don't remember", "someone else took over", "voices inside", "we", "us"]
+    },
+    "bpd": {
+      "name": "Borderline Personality Disorder",
+      "coreExperiences": ["emotional_intensity", "abandonment_fear", "identity_instability", "impulsivity", "self_harm", "relationship_chaos"],
+      "validationStatements": [
+        "Your emotions are intense because you feel things deeply. That's not a flaw.",
+        "Fear of abandonment makes sense when you've been left before.",
+        "Not knowing who you are is painful. Your identity was shaped by chaos.",
+        "The urge to hurt yourself is trying to help you cope with unbearable pain."
+      ],
+      "interventionPriority": ["cold_water_reset", "bilateral_tapping", "boundary_visualization", "self_compassion_touch", "narrative_coherence"],
+      "contraindicated": ["rejection", "inconsistency", "abandonment_threats"],
+      "keyPhrases": ["everyone leaves", "I hate myself", "I don't know who I am", "splitting", "favorite person", "empty inside", "cutting", "borderline"]
+    },
+    "depression": {
+      "name": "Major Depressive Disorder",
+      "coreExperiences": ["hopelessness", "anhedonia", "fatigue", "worthlessness", "suicidal_ideation", "isolation"],
+      "validationStatements": [
+        "Depression lies to you. It tells you nothing will ever change. That's the illness talking.",
+        "Not being able to feel pleasure isn't laziness. Your brain's reward system is struggling.",
+        "The exhaustion is real. Depression takes enormous energy to carry.",
+        "Feeling worthless is a symptom, not a truth about who you are."
+      ],
+      "interventionPriority": ["walking_grounding", "dance_shake", "pet_connection", "power_pose", "coherent_breathing"],
+      "contraindicated": ["toxic_positivity", "just_cheer_up"],
+      "keyPhrases": ["hopeless", "worthless", "can't get out of bed", "nothing matters", "don't care anymore", "tired all the time", "want to die", "no point"]
+    },
+    "anxiety_disorders": {
+      "name": "Anxiety Disorders",
+      "coreExperiences": ["worry", "panic", "physical_symptoms", "avoidance", "catastrophizing", "hyperarousal"],
+      "validationStatements": [
+        "Your anxiety is your brain trying to protect you from perceived threats.",
+        "Panic attacks are terrifying but not dangerous. Your body thinks there's danger when there isn't.",
+        "The physical symptoms are real. Anxiety lives in the body.",
+        "Avoiding things that scare you makes sense, even when it shrinks your world."
+      ],
+      "interventionPriority": ["physiological_sigh", "box_breathing", "five_four_three_two_one", "progressive_muscle", "coherent_breathing"],
+      "contraindicated": ["dismissing", "forced_exposure_without_support"],
+      "keyPhrases": ["anxious", "worried", "panic attack", "can't breathe", "heart racing", "something bad will happen", "what if", "nervous"]
+    },
+    "ocd": {
+      "name": "Obsessive-Compulsive Disorder",
+      "coreExperiences": ["intrusive_thoughts", "compulsions", "doubt", "contamination_fear", "need_for_certainty", "guilt"],
+      "validationStatements": [
+        "Intrusive thoughts are not who you are. Everyone has them - OCD just makes them stick.",
+        "The compulsions make sense - they temporarily relieve unbearable anxiety.",
+        "Needing certainty in an uncertain world is exhausting. OCD exploits that need.",
+        "The guilt you feel about your thoughts is part of the disorder, not evidence of your character."
+      ],
+      "interventionPriority": ["reality_testing", "coherent_breathing", "self_compassion_touch", "narrative_coherence"],
+      "contraindicated": ["reassurance_seeking_enabling", "thought_suppression"],
+      "keyPhrases": ["intrusive thoughts", "can't stop thinking", "have to", "what if I", "contaminated", "checking", "counting", "just right"]
+    },
+    "eating_disorders": {
+      "name": "Eating Disorders",
+      "coreExperiences": ["body_dysmorphia", "control", "restriction", "binging", "purging", "shame"],
+      "validationStatements": [
+        "Your relationship with food and your body developed for reasons that made sense.",
+        "Control over food often starts when other things feel out of control.",
+        "The shame around eating is not about food - it's about deeper pain.",
+        "Your body is not the enemy, even when it feels that way."
+      ],
+      "interventionPriority": ["self_compassion_touch", "body_reclamation", "boundary_visualization", "coherent_breathing"],
+      "contraindicated": ["weight_focus", "food_shaming", "body_comments"],
+      "keyPhrases": ["fat", "calories", "purge", "binge", "restrict", "body", "weight", "eating", "food", "mirror"]
+    },
+    "bipolar": {
+      "name": "Bipolar Disorder",
+      "coreExperiences": ["mood_cycling", "mania", "depression", "impulsivity", "grandiosity", "sleep_disruption"],
+      "validationStatements": [
+        "Your brain cycles between states. Neither state is the 'real' you - you are all of it.",
+        "Mania can feel amazing until it doesn't. The crash is not your fault.",
+        "Managing bipolar takes enormous effort. You're doing hard work.",
+        "The impulsivity during episodes doesn't define your character."
+      ],
+      "interventionPriority": ["routine_anchoring", "coherent_breathing", "walking_grounding", "narrative_coherence"],
+      "contraindicated": ["sleep_deprivation", "overstimulation"],
+      "keyPhrases": ["manic", "hypomanic", "cycling", "can't sleep", "racing thoughts", "on top of the world", "crashed", "bipolar", "haven't slept", "no sleep", "don't need sleep", "feel amazing", "so many ideas", "change the world", "destined", "quit my job", "grandiose", "invincible", "unstoppable", "genius", "never felt better", "incredible energy", "spending spree", "big plans", "mood swings", "4 days", "3 days"]
+    },
+    "schizophrenia_spectrum": {
+      "name": "Schizophrenia Spectrum",
+      "coreExperiences": ["hallucinations", "delusions", "disorganization", "negative_symptoms", "paranoia", "cognitive_difficulties"],
+      "validationStatements": [
+        "What you're experiencing is real to you, even if others can't perceive it.",
+        "Your brain processes information differently. That's not a moral failing.",
+        "The voices or visions are distressing. You don't have to face them alone.",
+        "Paranoia often starts from real experiences of being unsafe or betrayed."
+      ],
+      "interventionPriority": ["reality_testing", "routine_anchoring", "feet_grounding", "coherent_breathing"],
+      "contraindicated": ["arguing_with_delusions", "isolation"],
+      "keyPhrases": ["voices", "they're watching", "not real", "paranoid", "can't think straight", "messages", "special meaning"]
+    },
+    "autism": {
+      "name": "Autism Spectrum",
+      "coreExperiences": ["sensory_overwhelm", "social_exhaustion", "masking", "meltdowns", "shutdowns", "special_interests"],
+      "validationStatements": [
+        "Your brain processes the world differently. That's neurodiversity, not disorder.",
+        "Masking to fit in is exhausting. You deserve spaces where you can be yourself.",
+        "Meltdowns and shutdowns are your nervous system's response to overwhelm, not bad behavior.",
+        "Your need for routine and predictability is valid."
+      ],
+      "interventionPriority": ["pressure_grounding", "routine_anchoring", "sound_anchoring", "boundary_visualization"],
+      "contraindicated": ["forced_eye_contact", "sensory_overload", "masking_demands"],
+      "keyPhrases": ["overwhelmed", "too loud", "too bright", "meltdown", "shutdown", "masking", "autistic", "sensory", "routine"]
+    },
+    "adhd": {
+      "name": "ADHD",
+      "coreExperiences": ["attention_difficulties", "hyperactivity", "impulsivity", "rejection_sensitivity", "time_blindness", "emotional_dysregulation"],
+      "validationStatements": [
+        "Your brain works differently, not deficiently. ADHD has strengths too.",
+        "Rejection sensitivity is real and painful. Your reactions make sense.",
+        "Time blindness isn't laziness. Your brain genuinely perceives time differently.",
+        "The shame from years of 'not trying hard enough' isn't deserved."
+      ],
+      "interventionPriority": ["walking_grounding", "dance_shake", "bilateral_tapping", "routine_anchoring"],
+      "contraindicated": ["shaming", "long_instructions"],
+      "keyPhrases": ["can't focus", "distracted", "forgot", "late", "rejection", "too much", "hyperactive", "impulsive", "adhd"]
+    },
+    "grief": {
+      "name": "Grief and Loss",
+      "coreExperiences": ["sadness", "yearning", "anger", "guilt", "disbelief", "identity_shift"],
+      "validationStatements": [
+        "Grief has no timeline. There's no right way to grieve.",
+        "The waves of pain are normal. Grief comes and goes.",
+        "Missing them doesn't mean you're not healing. Love doesn't end.",
+        "Anger at the person who died, or at yourself, is a normal part of grief."
+      ],
+      "interventionPriority": ["butterfly_hug", "safe_person_visualization", "self_compassion_touch", "continuity_anchoring"],
+      "contraindicated": ["rushing", "moving_on_pressure"],
+      "keyPhrases": ["died", "lost", "gone", "miss them", "grief", "funeral", "death", "passed away", "mourning"]
+    },
+    "substance_use": {
+      "name": "Substance Use",
+      "coreExperiences": ["craving", "withdrawal", "shame", "relapse", "escape", "self_medication"],
+      "validationStatements": [
+        "Substances often start as a solution to unbearable pain. You were trying to survive.",
+        "Relapse is part of recovery for many people. It doesn't erase your progress.",
+        "The shame around addiction often makes it harder to get help. You deserve compassion.",
+        "Craving is your brain, not your character. You're fighting neurobiology."
+      ],
+      "interventionPriority": ["cold_water_reset", "walking_grounding", "routine_anchoring", "safe_person_visualization"],
+      "contraindicated": ["shaming", "enabling"],
+      "keyPhrases": ["drinking", "using", "high", "drunk", "relapse", "craving", "withdrawal", "sober", "recovery", "addiction"]
+    }
+  },
+  "crisisProtocols": {
+    "active_suicidal_plan": {
+      "priority": "CRITICAL",
+      "immediateActions": ["immediate_988_connection", "means_restriction_urgent", "do_not_leave_alone", "emergency_services_if_imminent"],
+      "techniques": ["box_breathing", "cold_water_reset", "stay_on_line"],
+      "resources": ["988", "911", "local_emergency"],
+      "languageGuidance": "CRITICAL: Active plan detected. Do not leave the conversation. Stay present. Encourage immediate call to 988 or 911. Do not promise confidentiality. Ask about immediate safety. Acknowledge their pain is real. Remind them this moment will pass."
+    },
+    "suicidal_ideation": {
+      "priority": "HIGHEST",
+      "immediateActions": ["safety_assessment", "means_restriction", "crisis_line_connection"],
+      "techniques": ["cold_water_reset", "physiological_sigh", "safe_person_visualization"],
+      "resources": ["988", "crisis_text_line", "local_emergency"],
+      "languageGuidance": "Do not minimize. Do not promise confidentiality. Ask directly about plan and means. Stay present."
+    },
+    "self_harm_active": {
+      "priority": "HIGH",
+      "immediateActions": ["harm_reduction", "alternative_sensation", "emotional_validation"],
+      "techniques": ["cold_water_reset", "texture_anchoring", "bilateral_tapping"],
+      "resources": ["crisis_text_line", "self_injury_outreach"],
+      "languageGuidance": "Do not shame. Acknowledge the pain driving the urge. Offer alternatives that provide sensation without damage."
+    },
+    "psychotic_episode": {
+      "priority": "HIGH",
+      "immediateActions": ["reality_anchoring", "reduce_stimulation", "safety_check"],
+      "techniques": ["reality_testing", "feet_grounding", "routine_anchoring"],
+      "resources": ["988", "local_crisis_team"],
+      "languageGuidance": "Do not argue with delusions. Stay calm. Use simple, clear language. Focus on safety and comfort."
+    },
+    "panic_attack": {
+      "priority": "MEDIUM",
+      "immediateActions": ["breathing_regulation", "grounding", "reassurance"],
+      "techniques": ["physiological_sigh", "cold_water_reset", "five_four_three_two_one"],
+      "resources": [],
+      "languageGuidance": "Remind them it will pass. Stay calm. Guide breathing. Do not tell them to 'calm down.'"
+    },
+    "dissociative_episode": {
+      "priority": "MEDIUM",
+      "immediateActions": ["sensory_grounding", "orientation", "safety"],
+      "techniques": ["cold_water_reset", "texture_anchoring", "timeline_grounding"],
+      "resources": [],
+      "languageGuidance": "Speak slowly and clearly. Use their name. Orient to present time and place. Do not touch without permission."
+    }
+  }
+}

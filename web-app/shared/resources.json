@@ -1,0 +1,542 @@
+{
+  "national": {
+    "crisis": [
+      {
+        "name": "988 Suicide & Crisis Lifeline",
+        "phone": "988",
+        "description": "24/7 crisis support for suicide, mental health, substance use",
+        "text": "988",
+        "chat": "988lifeline.org",
+        "priority": 1
+      },
+      {
+        "name": "Crisis Text Line",
+        "phone": null,
+        "description": "24/7 text-based crisis support",
+        "text": "HOME to 741741",
+        "priority": 2
+      },
+      {
+        "name": "SAMHSA National Helpline",
+        "phone": "1-800-662-4357",
+        "description": "24/7 treatment referrals and information",
+        "priority": 3
+      }
+    ],
+    "domesticViolence": [
+      {
+        "name": "National Domestic Violence Hotline",
+        "phone": "1-800-799-7233",
+        "description": "24/7 support for domestic violence survivors",
+        "text": "START to 88788",
+        "chat": "thehotline.org",
+        "priority": 1
+      },
+      {
+        "name": "National Sexual Assault Hotline",
+        "phone": "1-800-656-4673",
+        "description": "24/7 support for sexual assault survivors",
+        "chat": "rainn.org",
+        "priority": 2
+      }
+    ],
+    "substanceUse": [
+      {
+        "name": "SAMHSA National Helpline",
+        "phone": "1-800-662-4357",
+        "description": "24/7 treatment referrals, free and confidential",
+        "priority": 1
+      },
+      {
+        "name": "Alcoholics Anonymous",
+        "phone": "1-212-870-3400",
+        "description": "AA meeting finder and support",
+        "website": "aa.org",
+        "priority": 2
+      },
+      {
+        "name": "Narcotics Anonymous",
+        "phone": "1-818-773-9999",
+        "description": "NA meeting finder and support",
+        "website": "na.org",
+        "priority": 3
+      }
+    ],
+    "eatingDisorders": [
+      {
+        "name": "National Eating Disorders Association",
+        "phone": "1-800-931-2237",
+        "description": "Support, resources, and treatment options",
+        "text": "NEDA to 741741",
+        "priority": 1
+      },
+      {
+        "name": "ANAD Helpline",
+        "phone": "1-888-375-7767",
+        "description": "Free eating disorder support",
+        "priority": 2
+      }
+    ],
+    "lgbtq": [
+      {
+        "name": "Trevor Project",
+        "phone": "1-866-488-7386",
+        "description": "24/7 crisis support for LGBTQ+ youth",
+        "text": "START to 678-678",
+        "chat": "thetrevorproject.org",
+        "priority": 1
+      },
+      {
+        "name": "Trans Lifeline",
+        "phone": "1-877-565-8860",
+        "description": "Peer support for trans people",
+        "priority": 2
+      },
+      {
+        "name": "LGBT National Hotline",
+        "phone": "1-888-843-4564",
+        "description": "Peer support for LGBTQ+ individuals",
+        "priority": 3
+      }
+    ],
+    "veterans": [
+      {
+        "name": "Veterans Crisis Line",
+        "phone": "988 then press 1",
+        "description": "24/7 crisis support for veterans",
+        "text": "838255",
+        "priority": 1
+      }
+    ],
+    "youth": [
+      {
+        "name": "Childhelp National Child Abuse Hotline",
+        "phone": "1-800-422-4453",
+        "description": "24/7 support for child abuse",
+        "priority": 1
+      },
+      {
+        "name": "National Runaway Safeline",
+        "phone": "1-800-786-2929",
+        "description": "24/7 support for runaway youth",
+        "priority": 2
+      }
+    ],
+    "telehealth": [
+      {
+        "name": "BetterHelp",
+        "website": "betterhelp.com",
+        "description": "Online therapy platform",
+        "priority": 1
+      },
+      {
+        "name": "Talkspace",
+        "website": "talkspace.com",
+        "description": "Online therapy and psychiatry",
+        "priority": 2
+      },
+      {
+        "name": "Open Path Collective",
+        "website": "openpathcollective.org",
+        "description": "Affordable therapy ($30-$80/session)",
+        "priority": 3
+      }
+    ]
+  },
+  "states": {
+    "AL": {
+      "name": "Alabama",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Alabama Department of Mental Health: 1-800-367-0955"
+    },
+    "AK": {
+      "name": "Alaska",
+      "crisis": "1-877-266-4357",
+      "mentalHealth": "Careline Crisis Line"
+    },
+    "AZ": {
+      "name": "Arizona",
+      "crisis": "1-800-631-1314",
+      "mentalHealth": "Arizona Crisis Line"
+    },
+    "AR": {
+      "name": "Arkansas",
+      "crisis": "1-888-274-7472",
+      "mentalHealth": "Arkansas Crisis Center"
+    },
+    "CA": {
+      "name": "California",
+      "crisis": "1-800-854-7771",
+      "mentalHealth": "California Peer-Run Warm Line"
+    },
+    "CO": {
+      "name": "Colorado",
+      "crisis": "1-844-493-8255",
+      "mentalHealth": "Colorado Crisis Services"
+    },
+    "CT": {
+      "name": "Connecticut",
+      "crisis": "1-800-203-1234",
+      "mentalHealth": "Connecticut Mental Health Center"
+    },
+    "DE": {
+      "name": "Delaware",
+      "crisis": "1-800-652-2929",
+      "mentalHealth": "Delaware Hope Line"
+    },
+    "FL": {
+      "name": "Florida",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Florida Crisis Line"
+    },
+    "GA": {
+      "name": "Georgia",
+      "crisis": "1-800-715-4225",
+      "mentalHealth": "Georgia Crisis & Access Line"
+    },
+    "HI": {
+      "name": "Hawaii",
+      "crisis": "1-800-753-6879",
+      "mentalHealth": "Hawaii CARES"
+    },
+    "ID": {
+      "name": "Idaho",
+      "crisis": "1-208-398-4357",
+      "mentalHealth": "Idaho Suicide Prevention Hotline"
+    },
+    "IL": {
+      "name": "Illinois",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Illinois Call4Calm: Text TALK to 552020"
+    },
+    "IN": {
+      "name": "Indiana",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Indiana Be Well Crisis Helpline: 1-866-588-1315"
+    },
+    "IA": {
+      "name": "Iowa",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Your Life Iowa: 1-855-581-8111"
+    },
+    "KS": {
+      "name": "Kansas",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Kansas Suicide Prevention HQ"
+    },
+    "KY": {
+      "name": "Kentucky",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Kentucky Mental Health Line"
+    },
+    "LA": {
+      "name": "Louisiana",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Louisiana Crisis Line"
+    },
+    "ME": {
+      "name": "Maine",
+      "crisis": "1-888-568-1112",
+      "mentalHealth": "Maine Crisis Line"
+    },
+    "MD": {
+      "name": "Maryland",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Maryland Crisis Hotline"
+    },
+    "MA": {
+      "name": "Massachusetts",
+      "crisis": "1-877-870-4673",
+      "mentalHealth": "Samaritans of Boston"
+    },
+    "MI": {
+      "name": "Michigan",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Michigan Crisis Line"
+    },
+    "MN": {
+      "name": "Minnesota",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Minnesota Crisis Line"
+    },
+    "MS": {
+      "name": "Mississippi",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Mississippi Crisis Line"
+    },
+    "MO": {
+      "name": "Missouri",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Missouri Crisis Line"
+    },
+    "MT": {
+      "name": "Montana",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Montana Crisis Line",
+      "ruralNote": "Limited in-person services - telehealth recommended"
+    },
+    "NE": {
+      "name": "Nebraska",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Nebraska Family Helpline: 1-888-866-8660"
+    },
+    "NV": {
+      "name": "Nevada",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Nevada Crisis Line"
+    },
+    "NH": {
+      "name": "New Hampshire",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "NH Rapid Response: 1-833-710-6477"
+    },
+    "NJ": {
+      "name": "New Jersey",
+      "crisis": "1-866-202-4357",
+      "mentalHealth": "NJ Mental Health Cares"
+    },
+    "NM": {
+      "name": "New Mexico",
+      "crisis": "1-855-662-7474",
+      "mentalHealth": "NM Crisis & Access Line"
+    },
+    "NY": {
+      "name": "New York",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "NYC Well: 1-888-692-9355"
+    },
+    "NC": {
+      "name": "North Carolina",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "NC HopeLine: 1-855-587-3463"
+    },
+    "ND": {
+      "name": "North Dakota",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "ND Crisis Line",
+      "ruralNote": "Limited in-person services - telehealth recommended"
+    },
+    "OH": {
+      "name": "Ohio",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Ohio Crisis Text Line: Text 4HOPE to 741741"
+    },
+    "OK": {
+      "name": "Oklahoma",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Oklahoma Crisis Line"
+    },
+    "OR": {
+      "name": "Oregon",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Oregon YouthLine: 1-877-968-8491"
+    },
+    "PA": {
+      "name": "Pennsylvania",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "PA Support & Referral Helpline: 1-855-284-2494"
+    },
+    "RI": {
+      "name": "Rhode Island",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "RI Crisis Line"
+    },
+    "SC": {
+      "name": "South Carolina",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "SC Crisis Line"
+    },
+    "SD": {
+      "name": "South Dakota",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "SD Crisis Line",
+      "ruralNote": "Limited in-person services - telehealth recommended"
+    },
+    "TN": {
+      "name": "Tennessee",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Tennessee Crisis Line"
+    },
+    "TX": {
+      "name": "Texas",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Texas Health and Human Services: 1-877-541-7905"
+    },
+    "UT": {
+      "name": "Utah",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Utah Crisis Line"
+    },
+    "VT": {
+      "name": "Vermont",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Vermont Crisis Line"
+    },
+    "VA": {
+      "name": "Virginia",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Virginia Crisis Line"
+    },
+    "WA": {
+      "name": "Washington",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Washington Recovery Help Line: 1-866-789-1511"
+    },
+    "WV": {
+      "name": "West Virginia",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "WV Crisis Line",
+      "ruralNote": "Limited in-person services - telehealth recommended"
+    },
+    "WI": {
+      "name": "Wisconsin",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Wisconsin Crisis Line"
+    },
+    "WY": {
+      "name": "Wyoming",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "Wyoming Crisis Line",
+      "ruralNote": "Limited in-person services - telehealth recommended"
+    },
+    "DC": {
+      "name": "District of Columbia",
+      "crisis": "1-800-273-8255",
+      "mentalHealth": "DC Access HelpLine: 1-888-793-4357"
+    }
+  },
+  "conditionSpecific": {
+    "dissociation": {
+      "resources": [
+        {
+          "name": "ISSTD",
+          "description": "International Society for the Study of Trauma and Dissociation",
+          "website": "isst-d.org"
+        }
+      ],
+      "grounding": ["5-4-3-2-1", "cold_water", "feet_on_floor"]
+    },
+    "ptsd": {
+      "resources": [
+        {
+          "name": "PTSD Foundation",
+          "phone": "1-877-717-7873",
+          "description": "Support for PTSD survivors"
+        },
+        {
+          "name": "National Center for PTSD",
+          "website": "ptsd.va.gov",
+          "description": "VA PTSD resources"
+        }
+      ],
+      "grounding": ["butterfly_hug", "safe_place", "cold_water"]
+    },
+    "bpd": {
+      "resources": [
+        {
+          "name": "NEABPD",
+          "website": "borderlinepersonalitydisorder.org",
+          "description": "National Education Alliance for BPD"
+        }
+      ],
+      "grounding": ["stop_skill", "opposite_action", "tipp"]
+    },
+    "ocd": {
+      "resources": [
+        {
+          "name": "IOCDF",
+          "phone": "1-617-973-5801",
+          "website": "iocdf.org",
+          "description": "International OCD Foundation"
+        }
+      ],
+      "grounding": ["container_technique", "paced_breathing"]
+    },
+    "bipolar": {
+      "resources": [
+        {
+          "name": "DBSA",
+          "phone": "1-800-826-3632",
+          "website": "dbsalliance.org",
+          "description": "Depression and Bipolar Support Alliance"
+        }
+      ],
+      "grounding": ["paced_breathing", "sleep_hygiene"]
+    },
+    "schizophrenia": {
+      "resources": [
+        {
+          "name": "NAMI",
+          "phone": "1-800-950-6264",
+          "website": "nami.org",
+          "description": "National Alliance on Mental Illness"
+        }
+      ],
+      "grounding": ["feet_on_floor", "simple_grounding"]
+    },
+    "autism": {
+      "resources": [
+        {
+          "name": "Autism Society",
+          "phone": "1-800-328-8476",
+          "website": "autism-society.org",
+          "description": "Autism Society of America"
+        },
+        {
+          "name": "ASAN",
+          "website": "autisticadvocacy.org",
+          "description": "Autistic Self Advocacy Network"
+        }
+      ],
+      "grounding": ["sensory_reduction", "pressure", "quiet_space"]
+    },
+    "adhd": {
+      "resources": [
+        {
+          "name": "CHADD",
+          "phone": "1-800-233-4050",
+          "website": "chadd.org",
+          "description": "Children and Adults with ADHD"
+        }
+      ],
+      "grounding": ["stop_skill", "body_doubling"]
+    }
+  },
+  "ruralResources": {
+    "telehealth": [
+      {
+        "name": "BetterHelp",
+        "website": "betterhelp.com",
+        "description": "Online therapy - no travel required"
+      },
+      {
+        "name": "Talkspace",
+        "website": "talkspace.com",
+        "description": "Text, audio, video therapy"
+      },
+      {
+        "name": "Open Path Collective",
+        "website": "openpathcollective.org",
+        "description": "Affordable therapy ($30-$80/session)"
+      },
+      {
+        "name": "7 Cups",
+        "website": "7cups.com",
+        "description": "Free emotional support and affordable therapy"
+      }
+    ],
+    "textBased": [
+      {
+        "name": "Crisis Text Line",
+        "text": "HOME to 741741",
+        "description": "24/7 text-based crisis support"
+      },
+      {
+        "name": "SAMHSA Text",
+        "text": "HELLO to 741741",
+        "description": "Substance abuse text support"
+      }
+    ],
+    "note": "If you're in a rural area with limited local services, telehealth and text-based options can connect you with support regardless of location."
+  }
+}

@@ -1,0 +1,650 @@
+{
+  "environmentalContext": {
+    "urban": {
+      "characteristics": [
+        "High population density",
+        "Multiple mental health providers available",
+        "Public transportation access",
+        "Walk-in clinics often available",
+        "Emergency services typically < 10 min response",
+        "Support groups meet in-person regularly",
+        "Community mental health centers common"
+      ],
+      "indicators": [
+        "city", "downtown", "metro", "urban", "apartment", "subway", "bus", 
+        "neighborhood", "block", "street", "traffic", "crowded", "busy",
+        "manhattan", "brooklyn", "chicago", "los angeles", "houston", "phoenix",
+        "philadelphia", "san antonio", "san diego", "dallas", "san jose"
+      ],
+      "challenges": [
+        "Overstimulation and sensory overload",
+        "Social isolation despite crowds",
+        "High cost of living stress",
+        "Noise pollution affecting sleep",
+        "Limited green space for grounding",
+        "Fast pace contributing to anxiety"
+      ],
+      "adaptedSupport": {
+        "grounding": "Focus on finding quiet spaces - libraries, parks, quiet cafes",
+        "resources": "Walk-in mental health clinics, community centers, peer support groups",
+        "crisis": "Mobile crisis teams available in most urban areas"
+      }
+    },
+    "suburban": {
+      "characteristics": [
+        "Moderate population density",
+        "Car-dependent for most services",
+        "Some mental health providers available",
+        "Emergency services 10-20 min response",
+        "Community centers and churches offer support",
+        "School-based counseling for youth"
+      ],
+      "indicators": [
+        "suburb", "subdivision", "neighborhood", "cul-de-sac", "commute",
+        "drive", "car", "garage", "yard", "school district", "HOA",
+        "shopping center", "strip mall", "highway"
+      ],
+      "challenges": [
+        "Social isolation in car-centric design",
+        "Keeping up appearances pressure",
+        "Limited walkability affecting mood",
+        "Fewer spontaneous social interactions",
+        "Pressure to conform to neighborhood norms"
+      ],
+      "adaptedSupport": {
+        "grounding": "Use yard/garden for nature grounding, neighborhood walks",
+        "resources": "Community centers, religious organizations, school counselors",
+        "crisis": "May need to drive to services - plan routes in advance"
+      }
+    },
+    "rural": {
+      "characteristics": [
+        "Low population density",
+        "Very limited mental health providers",
+        "Long distances to services (30+ min)",
+        "Emergency services 20-45+ min response",
+        "Strong community ties but limited privacy",
+        "Telehealth often best option",
+        "Stigma around mental health often higher"
+      ],
+      "indicators": [
+        "rural", "farm", "ranch", "country", "acres", "miles", "hours away",
+        "small town", "population", "nearest", "no therapist", "no counselor",
+        "middle of nowhere", "isolated", "remote", "dirt road", "gravel",
+        "cattle", "crops", "tractor", "well water", "septic"
+      ],
+      "challenges": [
+        "Geographic isolation from services",
+        "Limited anonymity - everyone knows everyone",
+        "Stigma around seeking mental health help",
+        "Economic stress from agricultural uncertainty",
+        "Limited internet for telehealth in some areas",
+        "Gun access concerns in crisis situations",
+        "Seasonal affective issues from weather extremes"
+      ],
+      "adaptedSupport": {
+        "grounding": "Nature immersion readily available, animal-assisted grounding",
+        "resources": "Telehealth platforms, crisis text lines, agricultural stress hotlines",
+        "crisis": "Have safety plan for long emergency response times",
+        "specialResources": [
+          {
+            "name": "Farm Aid Hotline",
+            "phone": "1-800-327-6243",
+            "description": "Support for farming families facing stress"
+          },
+          {
+            "name": "Rural Mental Health Resources",
+            "website": "ruralhealthinfo.org",
+            "description": "Directory of rural-specific mental health services"
+          }
+        ]
+      }
+    },
+    "remote": {
+      "characteristics": [
+        "Extremely low population density",
+        "No local mental health services",
+        "Emergency services 45+ min response",
+        "May have limited cell/internet service",
+        "Self-reliance culture strong",
+        "Telehealth may be only option"
+      ],
+      "indicators": [
+        "off-grid", "no cell service", "satellite", "hours from town",
+        "wilderness", "mountain", "desert", "reservation", "tribal land",
+        "alaska", "backcountry", "homestead"
+      ],
+      "challenges": [
+        "Complete isolation from services",
+        "Communication barriers",
+        "Self-reliance expectation preventing help-seeking",
+        "Extreme weather limiting travel",
+        "Limited emergency response capability"
+      ],
+      "adaptedSupport": {
+        "grounding": "Deep nature connection, traditional practices if applicable",
+        "resources": "Satellite-based telehealth, crisis text when available, tribal health services",
+        "crisis": "Pre-established safety plans essential, trusted contacts identified",
+        "preparation": "Download offline resources, identify nearest emergency services in advance"
+      }
+    }
+  },
+  "culturalContext": {
+    "general": {
+      "principles": [
+        "Respect individual's cultural framework for understanding distress",
+        "Avoid imposing Western mental health terminology",
+        "Recognize culture shapes expression of distress",
+        "Honor traditional healing alongside clinical approaches",
+        "Understand family/community role varies by culture"
+      ]
+    },
+    "latinx": {
+      "considerations": [
+        "Family (familia) central to identity and support",
+        "Respeto (respect) important in therapeutic relationship",
+        "Personalismo - warm personal relationships valued",
+        "Marianismo/machismo may affect help-seeking",
+        "Nervios, susto, ataque de nervios as cultural expressions",
+        "Immigration stress and documentation fears",
+        "Intergenerational trauma from migration"
+      ],
+      "indicators": [
+        "latino", "latina", "latinx", "hispanic", "mexican", "puerto rican",
+        "cuban", "dominican", "colombian", "spanish", "familia", "abuela",
+        "immigration", "undocumented", "daca", "border"
+      ],
+      "adaptedSupport": {
+        "approach": "Include family in support when appropriate, respect for elders",
+        "language": "Offer Spanish-language resources when detected",
+        "resources": [
+          {
+            "name": "National Alliance on Mental Illness (NAMI) Latino",
+            "website": "nami.org/Your-Journey/Identity-and-Cultural-Dimensions/Latino-Mental-Health",
+            "description": "Culturally-informed mental health resources"
+          },
+          {
+            "name": "Línea Nacional de Prevención del Suicidio",
+            "phone": "1-888-628-9454",
+            "description": "Spanish-language suicide prevention line"
+          }
+        ]
+      }
+    },
+    "blackAfrican": {
+      "considerations": [
+        "Historical trauma from slavery and systemic racism",
+        "Medical mistrust from historical abuses (Tuskegee, etc.)",
+        "Church and spirituality often central to coping",
+        "Strong Black woman/man expectations",
+        "Intergenerational trauma",
+        "Microaggressions and racial stress",
+        "Code-switching exhaustion"
+      ],
+      "indicators": [
+        "black", "african american", "african", "caribbean", "jamaican",
+        "haitian", "nigerian", "ethiopian", "church", "pastor", "racism",
+        "discrimination", "police", "profiling"
+      ],
+      "adaptedSupport": {
+        "approach": "Acknowledge systemic factors, validate racial stress experiences",
+        "resources": [
+          {
+            "name": "Black Mental Health Alliance",
+            "website": "blackmentalhealth.com",
+            "description": "Culturally-responsive mental health resources"
+          },
+          {
+            "name": "Therapy for Black Girls",
+            "website": "therapyforblackgirls.com",
+            "description": "Directory of Black female therapists"
+          },
+          {
+            "name": "Black Men Heal",
+            "website": "blackmenheal.org",
+            "description": "Free mental health services for Black men"
+          },
+          {
+            "name": "The Boris Lawrence Henson Foundation",
+            "website": "borislhensonfoundation.org",
+            "description": "Reducing stigma in Black community"
+          }
+        ]
+      }
+    },
+    "asian": {
+      "considerations": [
+        "Model minority myth creating pressure",
+        "Shame and loss of face concerns",
+        "Family honor and collective identity",
+        "Somatization of emotional distress common",
+        "Intergenerational communication gaps",
+        "Immigration and acculturation stress",
+        "Anti-Asian discrimination and violence"
+      ],
+      "indicators": [
+        "asian", "chinese", "japanese", "korean", "vietnamese", "filipino",
+        "indian", "pakistani", "bangladeshi", "thai", "cambodian", "hmong",
+        "laotian", "taiwanese", "parents expect", "shame", "honor", "face"
+      ],
+      "adaptedSupport": {
+        "approach": "Respect for indirect communication, family involvement considerations",
+        "resources": [
+          {
+            "name": "Asian Mental Health Collective",
+            "website": "asianmhc.org",
+            "description": "Directory of Asian therapists"
+          },
+          {
+            "name": "AAKOMA Project",
+            "website": "aakomaproject.org",
+            "description": "Asian American mental health resources"
+          }
+        ]
+      }
+    },
+    "indigenous": {
+      "considerations": [
+        "Historical trauma from colonization and forced assimilation",
+        "Boarding school intergenerational trauma",
+        "Connection to land and traditional practices",
+        "Two-spirit identity recognition",
+        "Tribal sovereignty and identity",
+        "High rates of suicide requiring culturally-grounded prevention",
+        "Traditional healing practices valued"
+      ],
+      "indicators": [
+        "native", "indigenous", "tribal", "reservation", "nation", "cherokee",
+        "navajo", "sioux", "apache", "choctaw", "ojibwe", "lakota", "inuit",
+        "alaska native", "hawaiian", "two-spirit", "elder", "ceremony"
+      ],
+      "adaptedSupport": {
+        "approach": "Honor traditional practices, acknowledge historical trauma",
+        "resources": [
+          {
+            "name": "StrongHearts Native Helpline",
+            "phone": "1-844-762-8483",
+            "description": "DV/SA support for Native Americans"
+          },
+          {
+            "name": "We R Native",
+            "website": "wernative.org",
+            "description": "Health resources for Native youth"
+          },
+          {
+            "name": "Indian Health Service",
+            "website": "ihs.gov",
+            "description": "Federal health services for tribal members"
+          }
+        ]
+      }
+    },
+    "middleEastern": {
+      "considerations": [
+        "Family honor and collectivism",
+        "Religious practices may be central to coping",
+        "Stigma around mental health in some communities",
+        "Immigration and refugee trauma",
+        "Islamophobia and discrimination stress",
+        "Gender role expectations vary"
+      ],
+      "indicators": [
+        "arab", "middle eastern", "muslim", "persian", "iranian", "iraqi",
+        "syrian", "lebanese", "palestinian", "egyptian", "afghan", "refugee",
+        "mosque", "imam", "halal", "hijab"
+      ],
+      "adaptedSupport": {
+        "approach": "Respect religious practices, family involvement when appropriate",
+        "resources": [
+          {
+            "name": "Maristan",
+            "website": "maristan.org",
+            "description": "Muslim mental health resources"
+          },
+          {
+            "name": "Khalil Center",
+            "website": "khalilcenter.com",
+            "description": "Islamically-integrated mental health"
+          }
+        ]
+      }
+    }
+  },
+  "communityContext": {
+    "lgbtq": {
+      "considerations": [
+        "Minority stress from discrimination",
+        "Family rejection trauma",
+        "Coming out stress and safety concerns",
+        "Internalized homophobia/transphobia",
+        "Healthcare discrimination experiences",
+        "Higher rates of depression, anxiety, suicidality",
+        "Chosen family importance"
+      ],
+      "indicators": [
+        "gay", "lesbian", "bisexual", "transgender", "trans", "queer", "lgbtq",
+        "nonbinary", "coming out", "closeted", "partner", "same-sex", "pride",
+        "deadname", "pronouns", "transition", "hormone", "binding"
+      ],
+      "adaptedSupport": {
+        "approach": "Affirming language, respect chosen name/pronouns",
+        "resources": [
+          {
+            "name": "Trevor Project",
+            "phone": "1-866-488-7386",
+            "description": "24/7 LGBTQ+ youth crisis support"
+          },
+          {
+            "name": "Trans Lifeline",
+            "phone": "1-877-565-8860",
+            "description": "Peer support for trans people"
+          },
+          {
+            "name": "PFLAG",
+            "website": "pflag.org",
+            "description": "Support for LGBTQ+ people and families"
+          }
+        ]
+      }
+    },
+    "veteran": {
+      "considerations": [
+        "Combat trauma and moral injury",
+        "Military sexual trauma (MST)",
+        "Transition to civilian life challenges",
+        "Survivor guilt",
+        "Hypervigilance as adaptive response",
+        "Stigma around seeking help in military culture",
+        "TBI and co-occurring conditions"
+      ],
+      "indicators": [
+        "veteran", "military", "army", "navy", "marines", "air force",
+        "coast guard", "deployed", "deployment", "combat", "service",
+        "va", "discharge", "ptsd", "tbi", "mst"
+      ],
+      "adaptedSupport": {
+        "approach": "Respect military culture, understand chain of command mindset",
+        "resources": [
+          {
+            "name": "Veterans Crisis Line",
+            "phone": "988 then press 1",
+            "description": "24/7 crisis support for veterans"
+          },
+          {
+            "name": "Make the Connection",
+            "website": "maketheconnection.net",
+            "description": "Veteran mental health resources"
+          },
+          {
+            "name": "Give an Hour",
+            "website": "giveanhour.org",
+            "description": "Free mental health for veterans"
+          }
+        ]
+      }
+    },
+    "immigrant": {
+      "considerations": [
+        "Immigration trauma and loss",
+        "Documentation status stress",
+        "Language barriers to services",
+        "Cultural adjustment challenges",
+        "Family separation trauma",
+        "Discrimination and xenophobia",
+        "Fear of deportation affecting help-seeking"
+      ],
+      "indicators": [
+        "immigrant", "immigration", "visa", "green card", "undocumented",
+        "daca", "asylum", "refugee", "deportation", "ice", "border",
+        "country", "homeland", "back home", "family abroad"
+      ],
+      "adaptedSupport": {
+        "approach": "Confidentiality emphasis, immigration-status-blind services",
+        "resources": [
+          {
+            "name": "National Immigrant Women's Advocacy Project",
+            "website": "niwap.org",
+            "description": "Resources regardless of immigration status"
+          },
+          {
+            "name": "Immigrant Legal Resource Center",
+            "website": "ilrc.org",
+            "description": "Legal resources for immigrants"
+          }
+        ]
+      }
+    },
+    "religious": {
+      "christianity": {
+        "considerations": [
+          "Faith may be central to coping and meaning-making",
+          "Church community as support system",
+          "Prayer and scripture as grounding tools",
+          "Potential conflict between faith and mental health treatment",
+          "Pastoral counseling may be preferred"
+        ],
+        "indicators": [
+          "christian", "church", "jesus", "god", "pray", "prayer", "bible",
+          "pastor", "minister", "faith", "sin", "salvation", "baptist",
+          "catholic", "methodist", "lutheran", "evangelical"
+        ],
+        "adaptedSupport": {
+          "approach": "Integrate faith when helpful, respect spiritual practices",
+          "resources": [
+            {
+              "name": "Focus on the Family",
+              "phone": "1-800-232-6459",
+              "description": "Christian counseling referrals"
+            },
+            {
+              "name": "Catholic Charities",
+              "website": "catholiccharitiesusa.org",
+              "description": "Counseling services"
+            }
+          ]
+        }
+      },
+      "judaism": {
+        "considerations": [
+          "Community (kehillah) importance",
+          "Rabbi as spiritual guide",
+          "Intergenerational Holocaust trauma",
+          "Shabbat and holidays as structure",
+          "Tikkun olam (repairing the world) as meaning"
+        ],
+        "indicators": [
+          "jewish", "judaism", "rabbi", "synagogue", "temple", "shabbat",
+          "kosher", "torah", "holocaust", "israel", "antisemitism"
+        ],
+        "adaptedSupport": {
+          "approach": "Respect religious observances, acknowledge historical trauma",
+          "resources": [
+            {
+              "name": "Jewish Family Services",
+              "website": "jfsnetwork.org",
+              "description": "Counseling and support services"
+            }
+          ]
+        }
+      },
+      "islam": {
+        "considerations": [
+          "Ummah (community) as support",
+          "Prayer (salat) as grounding practice",
+          "Imam as spiritual guide",
+          "Ramadan and religious observances",
+          "Islamophobia and discrimination stress"
+        ],
+        "indicators": [
+          "muslim", "islam", "mosque", "imam", "prayer", "allah", "quran",
+          "ramadan", "hijab", "halal", "haram"
+        ],
+        "adaptedSupport": {
+          "approach": "Respect religious practices, gender considerations in therapy",
+          "resources": [
+            {
+              "name": "Khalil Center",
+              "website": "khalilcenter.com",
+              "description": "Islamically-integrated mental health"
+            }
+          ]
+        }
+      }
+    },
+    "disability": {
+      "considerations": [
+        "Ableism and discrimination",
+        "Chronic pain and fatigue impact on mental health",
+        "Healthcare system navigation challenges",
+        "Accessibility barriers to mental health services",
+        "Caregiver burnout for family members",
+        "Identity and self-worth challenges"
+      ],
+      "indicators": [
+        "disabled", "disability", "wheelchair", "chronic illness", "chronic pain",
+        "fibromyalgia", "autoimmune", "mobility", "accessible", "accommodation",
+        "caregiver", "spoons", "flare"
+      ],
+      "adaptedSupport": {
+        "approach": "Acknowledge disability experience, ensure accessible resources",
+        "resources": [
+          {
+            "name": "National Alliance on Mental Illness (NAMI)",
+            "website": "nami.org",
+            "description": "Mental health resources"
+          },
+          {
+            "name": "Disability Rights",
+            "website": "disabilityrightsca.org",
+            "description": "Advocacy and support"
+          }
+        ]
+      }
+    },
+    "elderly": {
+      "considerations": [
+        "Isolation and loneliness",
+        "Grief from multiple losses",
+        "Physical health impacting mental health",
+        "Medication interactions",
+        "Generational stigma around mental health",
+        "Cognitive changes and dementia concerns",
+        "End of life concerns"
+      ],
+      "indicators": [
+        "elderly", "senior", "retired", "retirement", "grandparent", "grandmother",
+        "grandfather", "nursing home", "assisted living", "medicare", "social security",
+        "widow", "widower", "aging"
+      ],
+      "adaptedSupport": {
+        "approach": "Respect life experience, address isolation, involve family when appropriate",
+        "resources": [
+          {
+            "name": "Eldercare Locator",
+            "phone": "1-800-677-1116",
+            "description": "Connect to local aging services"
+          },
+          {
+            "name": "Institute on Aging",
+            "phone": "1-800-971-0016",
+            "description": "24/7 friendship line for seniors"
+          }
+        ]
+      }
+    },
+    "youth": {
+      "considerations": [
+        "Developmental stage and brain development",
+        "School-related stress",
+        "Social media and cyberbullying",
+        "Identity formation",
+        "Family dynamics and parental mental health",
+        "Peer relationships importance",
+        "Limited autonomy in seeking help"
+      ],
+      "indicators": [
+        "teen", "teenager", "adolescent", "youth", "young", "school", "high school",
+        "middle school", "college", "student", "parent", "mom", "dad", "homework",
+        "grades", "friends", "social media", "tiktok", "instagram"
+      ],
+      "adaptedSupport": {
+        "approach": "Age-appropriate language, respect autonomy while ensuring safety",
+        "resources": [
+          {
+            "name": "Teen Line",
+            "phone": "1-800-852-8336",
+            "description": "Peer support for teens"
+          },
+          {
+            "name": "Boys Town National Hotline",
+            "phone": "1-800-448-3000",
+            "description": "24/7 support for youth and families"
+          }
+        ]
+      }
+    }
+  },
+  "socioeconomicContext": {
+    "poverty": {
+      "considerations": [
+        "Financial stress as primary concern",
+        "Limited access to paid mental health services",
+        "Food and housing insecurity",
+        "Transportation barriers",
+        "Lack of health insurance",
+        "Work schedule conflicts with appointments"
+      ],
+      "indicators": [
+        "poor", "poverty", "broke", "can't afford", "no money", "homeless",
+        "food stamps", "welfare", "medicaid", "uninsured", "eviction",
+        "bills", "debt", "paycheck to paycheck"
+      ],
+      "adaptedSupport": {
+        "approach": "Address basic needs first, connect to free/sliding scale services",
+        "resources": [
+          {
+            "name": "Open Path Collective",
+            "website": "openpathcollective.org",
+            "description": "Affordable therapy ($30-$80/session)"
+          },
+          {
+            "name": "SAMHSA Treatment Locator",
+            "website": "findtreatment.samhsa.gov",
+            "description": "Find free/low-cost treatment"
+          },
+          {
+            "name": "211",
+            "phone": "211",
+            "description": "Connect to local social services"
+          }
+        ]
+      }
+    },
+    "housingSecurity": {
+      "considerations": [
+        "Housing instability as major stressor",
+        "Domestic violence and housing",
+        "Shelter system trauma",
+        "Address requirements for services"
+      ],
+      "indicators": [
+        "homeless", "shelter", "couch surfing", "eviction", "housing",
+        "rent", "landlord", "apartment", "kicked out", "nowhere to go"
+      ],
+      "adaptedSupport": {
+        "resources": [
+          {
+            "name": "National Runaway Safeline",
+            "phone": "1-800-786-2929",
+            "description": "Housing resources for youth"
+          },
+          {
+            "name": "HUD",
+            "website": "hud.gov",
+            "description": "Housing assistance programs"
+          }
+        ]
+      }
+    }
+  }
+}
